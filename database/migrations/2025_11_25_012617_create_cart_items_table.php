@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
+            $table->string('cart_id');
+            $table->string('item_id');
+            $table->integer('quantity');
+            $table->double('current_price')->nullable();
+            $table->double('price_bought')->nullable();
+            $table->double('total_cost');
             $table->timestamps();
         });
     }
