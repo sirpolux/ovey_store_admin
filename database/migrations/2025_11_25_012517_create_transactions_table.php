@@ -13,6 +13,18 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->string("order_id");
+            $table->string("user_id");
+            $table->string("transaction_type")->default("CREDIT");
+            $table->string("recipient_account_id")->nullable();
+            $table->string("sender_account_name");
+            $table->string("sender_account_number");
+            $table->string("sender_bank");
+            $table->string("evidence_of_payment")->nullable();
+            $table->string("amount");
+            $table->string("transaction_status")->default("PENDING");
+            $table->string("transaction_channel")->default("BANK TRANSFER");
+            $table->string("payment_confirmed_by")->nullable();
             $table->timestamps();
         });
     }

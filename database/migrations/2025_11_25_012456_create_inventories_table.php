@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
-            $table->string('item_id')->unique();
+            $table->string('item_id')->nullable()->unique();
             $table->integer('quantity')->default(0);
             $table->double('price')->default(0);
             $table->string('status')->default('IN_STOCK');
