@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreStockRequest;
 use App\Http\Requests\UpdateStockRequest;
+use App\Models\Item;
 use App\Models\Stock;
 
 class StockController extends Controller
@@ -53,6 +54,10 @@ class StockController extends Controller
     public function create()
     {
         //
+        $items = Item::select('id', 'item_name')->where('is_deleted', false)->get();
+        return inertia('Stock/Create', [
+            'items' => $items,
+        ]);
     }
 
     /**

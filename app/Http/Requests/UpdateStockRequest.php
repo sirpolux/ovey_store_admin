@@ -11,7 +11,7 @@ class UpdateStockRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,6 +23,9 @@ class UpdateStockRequest extends FormRequest
     {
         return [
             //
+            'item_id' => 'required|exists:items,id',
+            'quantity' => 'required|integer|min:0',
+            'price' => 'required|numeric|min:0',    
         ];
     }
 }
