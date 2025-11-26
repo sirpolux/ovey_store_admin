@@ -6,6 +6,7 @@ use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Http\Resources\ItemResource;
 use App\Models\Item;
+use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
@@ -20,21 +21,18 @@ class ItemController extends Controller
         $sortDirection = request('sort_direction', 'desc');
 
         if (request()->has('keyword')) {
-            $query->where('author', 'like', '%' . request('keyword') . '%')
-                ->orWhere('title', 'like', '%' . request('keyword') . '%');
-        }
-
-        if (request()->has('category')) {
-            $query->where('category', request('category'));
+            $query->where('item_name', 'like', '%' . request('keyword') . '%')
+                ->orWhere('item_description', 'like', '%' . request('keyword') . '%')
+                ->orWhere('manufacturer', 'like', '%' . request('keyword') . '%');
         }
 
         $items = $query->orderBy($sortField, $sortDirection)->paginate(20)->onEachSide(1);
-
         return inertia('Item/Index', [
             'items' => ItemResource::collection($items),
             'queryParams' => request()->query(),
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -42,6 +40,14 @@ class ItemController extends Controller
     public function create()
     {
         //
+        $response = [
+            "message"=>session('message'),
+            "status"=>session('status'),
+        ];
+
+        return inertia('Item/Create', [
+            'response'=>$response
+        ]);
     }
 
     /**
@@ -50,6 +56,24 @@ class ItemController extends Controller
     public function store(StoreItemRequest $request)
     {
         //
+        $user = Auth::user();
+        $data  = [
+            "item_id"=>$request->item_id,
+            "item_name"=>$request->item_name,
+            "item_description"=>$request->item_description,
+            "manufacturer"=>$request->manufacturer,
+            "quantity"=>$request->quantity,
+            "price"=>$request->price,
+            "status"=>$request->status,
+            "created_by"=>$user->id,
+            "updated_by"=>$user->id,
+        ];
+        Item::create($data);
+        return to_route('item.create')->with([
+            "message"=>"Item created successfully",
+            "status"=>"success"
+        ]);
+
     }
 
     /**
@@ -58,6 +82,9 @@ class ItemController extends Controller
     public function show(Item $item)
     {
         //
+        return inertia('Item/Show', [
+            'item'=>new ItemResource($item->load(['createdBy', 'updatedBy']))
+        ]);
     }
 
     /**
@@ -66,6 +93,9 @@ class ItemController extends Controller
     public function edit(Item $item)
     {
         //
+        return inertia('Item/Edit', [
+            'item'=>new ItemResource($item)
+        ]);
     }
 
     /**
@@ -74,6 +104,22 @@ class ItemController extends Controller
     public function update(UpdateItemRequest $request, Item $item)
     {
         //
+        $user = Auth::user();
+        $data  = [
+            "item_id"=>$request->item_id,
+            "item_name"=>$request->item_name,
+            "item_description"=>$request->item_description,
+            "manufacturer"=>$request->manufacturer,
+            "quantity"=>$request->quantity,
+            "price"=>$request->price,
+            "status"=>$request->status,
+            "updated_by"=>$user->id,
+        ];
+        $item->update($data);
+        return to_route('item.edit', $item->id)->with([
+            "message"=>"Item updated successfully",
+            "status"=>"success"
+        ]);
     }
 
     /**

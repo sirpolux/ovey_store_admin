@@ -3,11 +3,13 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Models\Log;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('cart',CartController::class);
     Route::resource('order', OrderController::class);
     Route::resource('transactions', TransactionController::class);
+    Route::resource('log', LogController::class);
 });
 
 

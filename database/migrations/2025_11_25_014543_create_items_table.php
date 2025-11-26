@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
+            $table->string('item_id')->nullable()->unique();
+            $table->string('item_name');
+            $table->text('item_decription')->nullable();
+            $table->string('manufacturer')->nullable();
+            $table->integer('quantity')->default(0);
+            $table->double('price')->default(0);
+            $table->string('status')->default('IN_STOCK');
+            $table->foreignId('updated_by')->constrained('users')->nullOnDelete();
+            $table->foreignId('created_by')->constrained('users')->nullOnDelete();
+
             $table->timestamps();
         });
     }
