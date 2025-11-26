@@ -6,6 +6,8 @@ use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Http\Resources\ItemResource;
 use App\Models\Item;
+use App\Models\Log;
+use App\Services\LogService;
 use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
@@ -15,23 +17,42 @@ class ItemController extends Controller
      */
     public function index()
     {
-        
-        $query = Item::query();
-        $sortField = request('sort_field', 'id');
+        $sortField = request('sort_field', 'id');  
         $sortDirection = request('sort_direction', 'desc');
-
-        if (request()->has('keyword')) {
-            $query->where('item_name', 'like', '%' . request('keyword') . '%')
-                ->orWhere('item_description', 'like', '%' . request('keyword') . '%')
-                ->orWhere('manufacturer', 'like', '%' . request('keyword') . '%');
+        $keyword = request('keyword');
+    
+        $query = Item::query()
+            ->where('is_deleted', false);
+    
+        // Search filters safely grouped
+        if (!empty($keyword)) {
+            $query->where(function ($q) use ($keyword) {
+                $q->where('item_name', 'like', "%{$keyword}%")
+                  ->orWhere('item_description', 'like', "%{$keyword}%")
+                  ->orWhere('manufacturer', 'like', "%{$keyword}%");
+            });
         }
-
-        $items = $query->orderBy($sortField, $sortDirection)->paginate(20)->onEachSide(1);
+    
+        $items = $query->orderBy($sortField, $sortDirection)
+            ->paginate(20)
+            ->withQueryString(); // keeps filters on pagination
+    
         return inertia('Item/Index', [
-            'items' => ItemResource::collection($items),
-            'queryParams' => request()->query(),
+            'items'      => ItemResource::collection($items),
+            'filters'    => [
+                'keyword'        => $keyword,
+                'sort_field'     => $sortField,
+                'sort_direction' => $sortDirection,
+            ],
+            'pagination' => [
+                'total'      => $items->total(),
+                'per_page'   => $items->perPage(),
+                'current'    => $items->currentPage(),
+                'last_page'  => $items->lastPage(),
+            ],
         ]);
     }
+    
 
 
     /**
@@ -69,6 +90,13 @@ class ItemController extends Controller
             "updated_by"=>$user->id,
         ];
         Item::create($data);
+        
+        $log = app(LogService::class)->inventory(
+            'Item Created',
+            'Created item '.$request->item_name,
+            ['name'=>$request->item_name, 'price'=>$request->pricer, 'quantity'=>$request->quantity]
+        );
+        
         return to_route('item.create')->with([
             "message"=>"Item created successfully",
             "status"=>"success"
@@ -116,6 +144,12 @@ class ItemController extends Controller
             "updated_by"=>$user->id,
         ];
         $item->update($data);
+        $log = app(LogService::class)->inventory(
+            'Item Created',
+            'Created item '.$request->item_name,
+            ['name'=>$request->item_name, 'price'=>$request->pricer, 'quantity'=>$request->quantity, 'description'=>$request->item_description, 'manufacturer'=>$request->manufacturer], 
+        );
+
         return to_route('item.edit', $item->id)->with([
             "message"=>"Item updated successfully",
             "status"=>"success"
@@ -128,5 +162,12 @@ class ItemController extends Controller
     public function destroy(Item $item)
     {
         //
+        $item->is_deleted = true;
+        $item->save();
+        return to_route('item.index')->with([
+            "message"=>"Item deleted successfully",
+            "status"=>"success"
+        ]);
+
     }
 }

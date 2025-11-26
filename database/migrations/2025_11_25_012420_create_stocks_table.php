@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('item_id')->constrained('items')->nullOnDelete();
+            $table->integer('quantity')->default(0);
+            $table->double('price')->default(0);
+            $table->enum('status',['IN_STOCK', 'OUT_OF_STOCK', 'DISCONTINUED'])->default('IN_STOCK');
+            $table->foreignId('added_by')->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
     }

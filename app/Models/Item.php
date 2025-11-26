@@ -10,6 +10,18 @@ class Item extends Model
     /** @use HasFactory<\Database\Factories\ItemFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'item_id',
+        'item_name',
+        'item_description',
+        'manufacturer',
+        'quantity',
+        'price',
+        'status',
+        'created_by',
+        'updated_by',
+    ];
+
 
     public function createdBy(){
         return $this->belongsTo(User::class, 'created_by');
