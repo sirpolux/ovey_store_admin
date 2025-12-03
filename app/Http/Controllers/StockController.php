@@ -6,6 +6,7 @@ use App\Http\Requests\StoreStockRequest;
 use App\Http\Requests\UpdateStockRequest;
 use App\Models\Item;
 use App\Models\Stock;
+use Illuminate\Support\Facades\Auth;
 
 class StockController extends Controller
 {
@@ -66,6 +67,16 @@ class StockController extends Controller
     public function store(StoreStockRequest $request)
     {
         //
+        $user = Auth::user();
+        $data = [
+            'item_id' => $request->item_id,
+            'quantity' => $request->quantity,
+            'price' => $request->price,
+            'status' => $request->status,
+            'added_by' => $user->id,
+        ];
+        Stock::create($data);
+        
     }
 
     /**
