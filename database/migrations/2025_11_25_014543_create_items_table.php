@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('manufacturer')->nullable();
             $table->integer('quantity')->default(0);
             $table->double('price')->default(0);
-            $table->enum('status',['IN_STOCK', 'OUT_OF_STOCK', 'DISCONTINUED'])->default('IN_STOCK');
+            $table->enum('status',['IN_STOCK', 'OUT_OF_STOCK', 'DISCONTINUED'])->default('OUT_OF_STOCK');
             $table->boolean('is_deleted')->default(false);
             $table->foreignId('updated_by')->constrained('users')->nullOnDelete();
             $table->foreignId('created_by')->constrained('users')->nullOnDelete();

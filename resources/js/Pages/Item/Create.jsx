@@ -16,24 +16,11 @@ export default function Create({ response = null }) {
     
     const [imagePreview, setImagePreview] = useState(null);
     const { data, setData, post, errors, reset } = useForm({
-        author: '',
-        title: '',
+        item_name: '',
         price: '',
-        description: '',
-        image: '',
-        format: 'Hard Copy',
-        isbn: '',
-        published_date: '',
-        publisher: '',
-        language: 'English',
-        category: '',
-        chapters: '',
-        keywords: '',
-        pages: '',
-        summary: '',
-        edition: '',
+        item_description: '',
+        manufacturer: '',
         status: '',
-        stock: '',
     });
 
     const handleFileUpload = async (e) => {
@@ -99,16 +86,16 @@ export default function Create({ response = null }) {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Author */}
                             <div>
-                                <InputLabel htmlFor="author" value="Author *" />
-                                <TextInput name="author" value={data.author} onChange={e => setData('author', e.target.value)} className="mt-1 block w-full" />
-                                <InputError message={errors.author} className="mt-1 text-red-600" />
+                                <InputLabel htmlFor="item_name" value="Item Name *" />
+                                <TextInput name="item_name" value={data.item_name} onChange={e => setData('item_name', e.target.value)} className="mt-1 block w-full" />
+                                <InputError message={errors.item_name} className="mt-1 text-red-600" />
                             </div>
 
                             {/* Title */}
                             <div>
-                                <InputLabel htmlFor="title" value="Title *" />
-                                <TextInput name="title" value={data.title} onChange={e => setData('title', e.target.value)} className="mt-1 block w-full" />
-                                <InputError message={errors.title} className="mt-1 text-red-600" />
+                                <InputLabel htmlFor="manufacturer" value="Manufacturer *" />
+                                <TextInput name="title" value={data.manufacturer} onChange={e => setData('manufacturer', e.target.value)} className="mt-1 block w-full" />
+                                <InputError message={errors.manufacturer} className="mt-1 text-red-600" />
                             </div>
 
                             {/* ISBN */}
