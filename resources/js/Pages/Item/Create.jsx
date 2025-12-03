@@ -4,11 +4,11 @@ import SelectInput from "@/Components/SelectInput";
 import TextAreaInput from "@/Components/TextAreaInput";
 import TextInput from "@/Components/TextInput";
 import { Head, useForm, usePage } from "@inertiajs/react";
-import AdminDashboard from "../AdminDashboard";
 import { UploadCloud, Boxes } from 'lucide-react';
 import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import DashboardLayout from "../DashboardLayout";
 
 export default function Create({ response = null }) {
     const { cloudinary } = usePage().props; // gets cloudName from Laravel
@@ -89,7 +89,7 @@ export default function Create({ response = null }) {
         });
     };
     return (
-        <AdminDashboard>
+        <DashboardLayout>
             <Head title="New Inventory Item" />
             <div className="p-4 md:p-8">
                 <div className="bg-white dark:bg-gray-900 shadow rounded-xl p-6 md:p-10 overflow-auto max-h-[90vh]">
@@ -257,6 +257,6 @@ export default function Create({ response = null }) {
                     </form>
                 </div>
             </div>
-        </AdminDashboard>
+        </DashboardLayout>
     );
 }
