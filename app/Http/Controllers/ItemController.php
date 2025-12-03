@@ -79,13 +79,10 @@ class ItemController extends Controller
         //
         $user = Auth::user();
         $data  = [
-            "item_id"=>$request->item_id,
             "item_name"=>$request->item_name,
             "item_description"=>$request->item_description,
             "manufacturer"=>$request->manufacturer,
-            "quantity"=>$request->quantity,
             "price"=>$request->price,
-            "status"=>$request->status,
             "created_by"=>$user->id,
             "updated_by"=>$user->id,
         ];
