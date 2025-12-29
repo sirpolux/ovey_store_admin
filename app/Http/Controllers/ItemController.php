@@ -88,11 +88,11 @@ class ItemController extends Controller
         ];
         Item::create($data);
         
-        $log = app(LogService::class)->inventory(
-            'Item Created',
-            'Created item '.$request->item_name,
-            ['name'=>$request->item_name, 'price'=>$request->pricer, 'quantity'=>$request->quantity]
-        );
+        // $log = app(LogService::class)->inventory(
+        //     'Item Created',
+        //     'Created item '.$request->item_name,
+        //     ['name'=>$request->item_name, 'price'=>$request->pricer, 'quantity'=>$request->quantity]
+        // );
         
         return to_route('item.create')->with([
             "message"=>"Item created successfully",
