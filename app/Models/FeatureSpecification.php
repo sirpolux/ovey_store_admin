@@ -9,4 +9,8 @@ class FeatureSpecification extends Model
 {
     /** @use HasFactory<\Database\Factories\FeatureSpecificationFactory> */
     use HasFactory;
+    protected $fillable = [
+        'item_id',
+        'feature_name',
+    ];
 }

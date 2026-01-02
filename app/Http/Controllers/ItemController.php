@@ -8,7 +8,9 @@ use App\Http\Resources\ItemResource;
 use App\Models\Item;
 use App\Models\Log;
 use App\Services\LogService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 class ItemController extends Controller
 {
@@ -135,7 +137,11 @@ class ItemController extends Controller
     {
         //
         return inertia('Item/Edit', [
-            'item'=>new ItemResource($item)
+            'item'=>new ItemResource($item),
+            'breadcrumbs' => [
+                ['label' => 'Items', 'url' => route('item.index')],
+                ['label' => 'Edit Item', 'url' => route('item.edit', $item->id)],
+            ],
         ]);
     }
 
@@ -145,6 +151,8 @@ class ItemController extends Controller
     public function update(UpdateItemRequest $request, Item $item)
     {
         //
+
+        dd($request->all());
         $user = Auth::user();
         $data  = [
             "item_id"=>$request->item_id,
@@ -184,13 +192,42 @@ class ItemController extends Controller
 
     }
 
-    public function createFeature(Item $item){
+    public function createFeature($id){
+        $item = Item::findOrFail($id);
+        $item->load(['featureSpecifications']);
         return inertia('Item/CreateFeature', [
             "item"=>new ItemResource($item),
             'breadcrumbs' => [
                 ['label' => 'Items', 'url' => route('item.index')],
-                ['label' => 'Create Feature', 'url' => route('item.createFeature')],
+                ['label' => 'Create Feature', 'url' => route('item.feature.create', $item->id)],
             ],
         ]);       
+    }
+
+    public function storeFeature(Request $request){
+        //dd($request->all());
+        $request->validate([
+            "item_id"=>"required|exists:items,id",
+            "features"=>"required|string",
+        ]);
+
+        $item = Item::findOrFail($request->item_id);
+        //delete all current features
+        $item->featureSpecifications()->delete();
+       // dd($item);
+        $features = explode("\n", $request->features);
+        foreach($features as $feature){
+            $feature = trim($feature);
+            if(!empty($feature)){
+                $item->featureSpecifications()->create([
+                    "feature_name"=>$feature,
+                ]);
+            }
+        }
+
+        return to_route('item.show', $item->id)->with([
+            "message"=>"Features added successfully",
+            "status"=>"success"
+        ]);
     }
 }

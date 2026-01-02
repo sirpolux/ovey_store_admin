@@ -133,14 +133,14 @@ export default function Show({ item, auth, breadcrumbs }) {
                     <p className="font-medium text-gray-800">
                       {feature.feature_name}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    {/* <p className="text-sm text-gray-500">
                       {feature.feature_description || "—"}
-                    </p>
+                    </p> */}
                   </div>
-
+{/* 
                   <span className="text-sm font-semibold text-gray-700 ">
                     {feature.feature_value || "N/A"}
-                  </span>
+                  </span> */}
                 </div>
               ))}
             </div>
