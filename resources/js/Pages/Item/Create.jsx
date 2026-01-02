@@ -10,8 +10,9 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import DashboardLayout from "../DashboardLayout";
 import SelectInput from "@/Components/SelectInput";
+import Breadcrumbs from "@/Components/Breadcrumb";
 
-export default function Create({ response = null }) {
+export default function Create({ response = null , breadcrumbs}) {
     const { cloudinary } = usePage().props;
     const cloudName = cloudinary.cloudName;
 
@@ -64,6 +65,7 @@ export default function Create({ response = null }) {
     return (
         <DashboardLayout>
             <Head title="New Inventory Item" />
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
 
             <div className="p-4 md:p-8">
                 <motion.div

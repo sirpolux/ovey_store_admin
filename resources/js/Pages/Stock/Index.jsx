@@ -1,151 +1,163 @@
-import { Head, Link, router } from "@inertiajs/react";
-import { useState } from "react";
-//import { MenuIcon, ChevronDown, ChevronUp } from 'lucide-react';
-import { ChevronDownIcon, ChevronUpIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import Breadcrumbs from "@/Components/Breadcrumb";
+import DashboardLayout from "../DashboardLayout";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { PlusIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 
-import AdminDashboard from "../AdminDashboard";
-import TextInput from "@/Components/TextInput";
-import SelectInput from "@/Components/SelectInput";
-import Pagination from "@/Components/Pagination";
+export default function Index({ stocks, queryParams, breadcrumbs }) {
+  const { data, setData, get, processing } = useForm({
+    keyword: queryParams?.keyword || "",
+    start_date: queryParams?.start_date || "",
+    end_date: queryParams?.end_date || "",
+    per_page: queryParams?.per_page || stocks.per_page || 20,
+  });
 
-export default function Index({ stocks, auth, queryParams }) {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
-    const [keyword, setKeyword] = useState(queryParams.keyword || "");
+  const submitFilters = () => {
+    get(route("stock.index"), {
+      preserveState: true,
+      replace: true,
+    });
+  };
 
-    const handleSearch = () => {
-        const newParams = { ...queryParams };
-        if (keyword) {
-            newParams.keyword = keyword;
-        } else {
-            delete newParams.keyword;
-        }
-        router.get(route("stock.index"), newParams, { preserveState: true });
-    };
+  const handleChange = (key, value) => {
+    setData(key, value);
+    submitFilters();
+  };
 
-    const active = "w-4 text-gray-900";
-    const inactive = "w-4 text-gray-400";
+  return (
+    <DashboardLayout>
+      <Head title="Stock Management" />
 
-    const searchFieldChanged = (field, value) => {
-        // Handle search input change
-        // e.g., update query params and reload Inertia page
-    };
+      <div className="p-6 space-y-6">
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
 
-    const onKeyPress = (field, e) => {
-        if (e.key === 'Enter') {
-            searchFieldChanged(field, e.target.value);
-        }
-    };
+        {/* Header + Actions */}
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold text-gray-800">
+            Stock Management
+          </h1>
 
-    const sortChanged = (field) => {
-        // Handle sorting logic
-    };
+          <div className="flex items-center gap-3">
+            <Link
+              href={route("stock.create")}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+            >
+              <PlusIcon className="w-4 h-4" />
+              Add Stock
+            </Link>
 
-    return (
-        <AdminDashboard toggleSidebar={toggleSidebar} isSidebarOpen={sidebarOpen}>
-            <Head title="Stocks" />
+            <Link
+              href={route("stock.export", data)}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border text-gray-700 hover:bg-gray-50"
+            >
+              <ArrowDownTrayIcon className="w-4 h-4" />
+              Export CSV
+            </Link>
+          </div>
+        </div>
 
-            {/* Mobile Toggle Button
-            <div className="md:hidden mb-4">
-                <button onClick={toggleSidebar}>
-                    <MenuIcon className="w-6 h-6 text-gray-600" />
-                </button>
-            </div> */}
+        {/* Filters */}
+        <div className="bg-white border rounded-xl p-4 grid grid-cols-1 md:grid-cols-5 gap-4">
+          <input
+            type="text"
+            placeholder="Search item, added by..."
+            value={data.keyword}
+            onChange={(e) => handleChange("keyword", e.target.value)}
+            className="rounded-lg border px-3 py-2 text-sm"
+          />
 
-            {/* Page Title and Action */}
-            <div className="flex items-center justify-between mb-4">
-                <h1 className="text-xl font-semibold text-gray-800">Stock Records</h1>
-                <Link
-                    href={route('stock.create')}
-                    className="p-2 px-4 rounded-lg bg-green-700 text-white text-sm"
-                >
-                    + New Stock Entry
-                </Link>
+          <input
+            type="date"
+            value={data.start_date}
+            onChange={(e) => handleChange("start_date", e.target.value)}
+            className="rounded-lg border px-3 py-2 text-sm"
+          />
+
+          <input
+            type="date"
+            value={data.end_date}
+            onChange={(e) => handleChange("end_date", e.target.value)}
+            className="rounded-lg border px-3 py-2 text-sm"
+          />
+
+          <select
+            value={data.per_page}
+            onChange={(e) => handleChange("per_page", e.target.value)}
+            className="rounded-lg border px-3 py-2 text-sm"
+          >
+            {[10, 20, 50, 100].map((n) => (
+              <option key={n} value={n}>
+                {n} per page
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Table */}
+        <div className="bg-white border rounded-xl overflow-hidden">
+          {stocks.data.length === 0 ? (
+            <div className="p-10 text-center text-gray-500">
+              <p className="mb-4">No stock records found.</p>
+
+              <Link
+                href={route("stock.create")}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+              >
+                <PlusIcon className="w-4 h-4" />
+                Add Stock
+              </Link>
             </div>
+          ) : (
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 border-b">
+                <tr className="text-left text-gray-600">
+                  <th className="px-4 py-3">Item Name</th>
+                  <th className="px-4 py-3">Quantity</th>
+                  <th className="px-4 py-3">Price</th>
+                  <th className="px-4 py-3">Added By</th>
+                  <th className="px-4 py-3">Date Added</th>
+                </tr>
+              </thead>
 
-            {/* Table */}
-            <div className="overflow-auto max-h-[75vh] bg-white shadow rounded-lg mb-2">
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="text"
-                          placeholder="Search by Author or Title..."
-                          className="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-400"
-                          value={keyword}
-                          onChange={(e) => setKeyword(e.target.value)}
-                          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                        />
-                        <button
-                          onClick={handleSearch}
-                          className="bg-gray-200 p-2 rounded hover:bg-gray-300 transition"
-                        >
-                          <MagnifyingGlassIcon className="h-5 w-5 text-gray-600" />
-                        </button>
-                      </div>
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="p-3">
-                                
-                            </th>
-                            <th className="p-3"></th>
-                            <th className="p-3">
-                                {/* <SelectInput
-                                    onChange={e => searchFieldChanged('category', e.target.value)}
-                                    defaultValue={queryParams.category || ""}
-                                >
-                                    <option value="">All Categories</option>
-                                    <option value="Non-Fiction">Non Fiction</option>
-                                    <option value="Science">Science</option>
-                                </SelectInput> */}
-                            </th>
-                            <th className="p-3"></th>
-                            <th className="p-3"></th>
-                            <th className="p-3"></th>
-                        </tr>
-                        <tr className="text-xs text-left text-gray-700 uppercase tracking-wider">
-                            <th
-                                onClick={() => sortChanged('author')}
-                                className="p-3 cursor-pointer"
-                            >
-                                <div className="flex items-center gap-1">
-                                    Author
-                                    <ChevronUpIcon className={queryParams.sort_field === 'author' && queryParams.sort_direction === 'asc' ? active : inactive} />
-                                    <ChevronDownIcon className={queryParams.sort_field === 'author' && queryParams.sort_direction === 'desc' ? active : inactive} />
-                                </div>
-                            </th>
-                            <th onClick={() => sortChanged('name')} className="p-3 cursor-pointer">Title</th>
-                            <th className="p-3">Quantity</th>
-                            <th onClick={() => sortChanged('price')} className="p-3 cursor-pointer">Price</th>
-                            <th onClick={() => sortChanged('created_by')} className="p-3 cursor-pointer">Recorded By</th>
-                            <th className="p-3">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200 text-sm">
-                        {stocks.data.map(stock => (
-                            <tr key={stock.id} className="hover:bg-gray-50">
-                                <td className="p-3">{stock.author}</td>
-                                <td className="p-3">{stock.item_name}</td>
-                                <td className="p-3">{stock.quantity}</td>
-                                <td className="p-3">₦{Number(stock.item_price).toLocaleString()}</td>
-                                <td className="p-3">{stock.recorded_by.name}</td>
-                                <td className="p-3">
-                                    <Link
-                                        href={route('stock.show', stock.id)}
-                                        className="text-blue-600 hover:underline"
-                                    >
-                                        Open
-                                    </Link>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+              <tbody className="divide-y">
+                {stocks.data.map((stock) => (
+                  <tr key={stock.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 font-medium text-gray-800">
+                      {stock.item_name}
+                    </td>
+                    <td className="px-4 py-3">{stock.quantity}</td>
+                    <td className="px-4 py-3">
+                      ₦{Number(stock.price).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-3">{stock.added_by}</td>
+                    <td className="px-4 py-3 text-gray-500">
+                      {stock.created_at}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
 
-            {/* Pagination */}
-            <div className="mt-6 flex justify-center">
-                <Pagination links={stocks.meta.links} queryParams={queryParams} />
-            </div>
-        </AdminDashboard>
-    );
+        {/* Pagination */}
+        {stocks.links.length > 1 && (
+          <div className="flex justify-end gap-2">
+            {stocks.links.map((link, index) => (
+              <Link
+                key={index}
+                href={link.url || ""}
+                preserveState
+                className={`px-3 py-1 rounded text-sm ${
+                  link.active
+                    ? "bg-indigo-600 text-white"
+                    : "border hover:bg-gray-100"
+                } ${!link.url && "opacity-50 cursor-not-allowed"}`}
+                dangerouslySetInnerHTML={{ __html: link.label }}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </DashboardLayout>
+  );
 }

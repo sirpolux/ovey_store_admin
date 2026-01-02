@@ -33,7 +33,7 @@ export default function CreateFeature({ item, breadcrumbs }) {
     <DashboardLayout>
       <Head title={`Features · ${item.data.item_name}`} />
 
-      <div className="p-6 space-y-6 max-w-3xl">
+      <div className="p-6 space-y-6 ">
         <Breadcrumbs breadcrumbs={breadcrumbs} />
 
         {/* Header */}

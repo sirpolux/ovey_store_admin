@@ -159,7 +159,6 @@ class ItemController extends Controller
             "item_description"=>$request->item_description,
             "manufacturer"=>$request->manufacturer,
             "price"=>$request->price,
-            "status"=>$request->status??'IN_STOCK',
             "updated_by"=>$user->id,
         ];
         $item->update($data);

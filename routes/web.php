@@ -36,18 +36,21 @@ Route::middleware('auth')->group(function () {
     Route::resource('item', ItemController::class);
     Route::resource('user', UserController::class);
     Route::resource('stock', StockController::class);
-    Route::resource('cart',CartController::class);
+    Route::resource('cart', CartController::class);
     Route::resource('order', OrderController::class);
     Route::resource('transactions', TransactionController::class);
     Route::resource('log', LogController::class);
     Route::resource('settings', SettingController::class);
 
 
-    Route::get("item/feature/create/{id}",[ItemController::class,'createFeature'])->name('item.feature.create');
-    Route::post("items/feature/store",[ItemController::class,'storeFeature'])->name('item.feature.store');
+    Route::get("item/feature/create/{id}", [ItemController::class, 'createFeature'])->name('item.feature.create');
+    Route::post("items/feature/store", [ItemController::class, 'storeFeature'])->name('item.feature.store');
+    // routes/web.php
+    Route::get('/stock/export', [StockController::class, 'export'])
+        ->name('stock.export');
 });
 
 
 Route::get('/test', [DashboardController::class, 'index'])->name('test');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
