@@ -2,6 +2,7 @@ import { Head, useForm } from "@inertiajs/react";
 import Breadcrumbs from "@/Components/Breadcrumb";
 import DashboardLayout from "../DashboardLayout";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import toast from "react-hot-toast";
 
 export default function Edit({ item, breadcrumbs }) {
   const { data, setData, put, processing, errors } = useForm({
@@ -14,7 +15,11 @@ export default function Edit({ item, breadcrumbs }) {
   const submit = (e) => {
     e.preventDefault();
 
-    put(route("item.update", item.data.id));
+    put(route("item.update", item.data.id), {
+        onSuccess:()=>{
+            toast.success("Item updated successfully");
+        }
+    });
   };
 
   return (

@@ -23,9 +23,8 @@ class UpdateItemRequest extends FormRequest
     {
         return [
             'item_name' => 'required|string|max:255',
-            'item_description' => 'nullable|string',
+            'item_description' => 'required|string',
             'manufacturer' => 'nullable|string|max:255',
-            'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
             'status' => 'nullable|string|in:IN_STOCK,OUT_OF_STOCK,DISCONTINUED',
         ];

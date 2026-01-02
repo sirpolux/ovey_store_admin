@@ -152,24 +152,22 @@ class ItemController extends Controller
     {
         //
 
-        dd($request->all());
+       // dd($request->all());
         $user = Auth::user();
         $data  = [
-            "item_id"=>$request->item_id,
             "item_name"=>$request->item_name,
             "item_description"=>$request->item_description,
             "manufacturer"=>$request->manufacturer,
-            "quantity"=>$request->quantity,
             "price"=>$request->price,
-            "status"=>$request->status,
+            "status"=>$request->status??'IN_STOCK',
             "updated_by"=>$user->id,
         ];
         $item->update($data);
-        $log = app(LogService::class)->inventory(
-            'Item Created',
-            'Created item '.$request->item_name,
-            ['name'=>$request->item_name, 'price'=>$request->pricer, 'quantity'=>$request->quantity, 'description'=>$request->item_description, 'manufacturer'=>$request->manufacturer], 
-        );
+        // $log = app(LogService::class)->inventory(
+        //     'Item Created',
+        //     'Created item '.$request->item_name,
+        //     ['name'=>$request->item_name, 'price'=>$request->pricer, 'quantity'=>$request->quantity, 'description'=>$request->item_description, 'manufacturer'=>$request->manufacturer], 
+        // );
 
         return to_route('item.edit', $item->id)->with([
             "message"=>"Item updated successfully",
