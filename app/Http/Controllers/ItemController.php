@@ -50,6 +50,9 @@ class ItemController extends Controller
                 'current'    => $items->currentPage(),
                 'last_page'  => $items->lastPage(),
             ],
+            'breadcrumbs' => [
+                ['label' => 'Items', 'url' => route('item.index')],
+            ],
         ]);
     }
     
@@ -67,7 +70,11 @@ class ItemController extends Controller
         ];
 
         return inertia('Item/Create', [
-            'response'=>$response
+            'response'=>$response,
+            'breadcrumbs' => [
+                ['label' => 'Items', 'url' => route('item.index')],
+                ['label' => 'Create Item', 'url' => route('item.create')],
+            ],
         ]);
     }
 
@@ -86,7 +93,7 @@ class ItemController extends Controller
             "created_by"=>$user->id,
             "updated_by"=>$user->id,
         ];
-        Item::create($data);
+        $item = Item::create($data);
         
         // $log = app(LogService::class)->inventory(
         //     'Item Created',
@@ -94,9 +101,13 @@ class ItemController extends Controller
         //     ['name'=>$request->item_name, 'price'=>$request->pricer, 'quantity'=>$request->quantity]
         // );
         
-        return to_route('item.create')->with([
+        return to_route('item.show', $item->id)->with([
             "message"=>"Item created successfully",
-            "status"=>"success"
+            "status"=>"success",
+            "breadcrumbs" => [
+                ['label' => 'Items', 'url' => route('item.index')],
+                ['label' => 'Create Item', 'url' => route('item.create')],
+            ],
         ]);
 
     }
@@ -107,8 +118,13 @@ class ItemController extends Controller
     public function show(Item $item)
     {
         //
+        $item->load(['featureSpecifications']);
         return inertia('Item/Show', [
-            'item'=>new ItemResource($item->load(['createdBy', 'updatedBy']))
+            'item'=>new ItemResource($item->load(['createdBy', 'updatedBy'])),
+            "breadcrumbs" => [
+                ['label' => 'Items', 'url' => route('item.index')],
+                ['label' => 'View Item', 'url' => route('item.show', $item->id)],
+            ],
         ]);
     }
 
@@ -166,5 +182,15 @@ class ItemController extends Controller
             "status"=>"success"
         ]);
 
+    }
+
+    public function createFeature(Item $item){
+        return inertia('Item/CreateFeature', [
+            "item"=>new ItemResource($item),
+            'breadcrumbs' => [
+                ['label' => 'Items', 'url' => route('item.index')],
+                ['label' => 'Create Feature', 'url' => route('item.createFeature')],
+            ],
+        ]);       
     }
 }

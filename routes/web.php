@@ -41,6 +41,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('transactions', TransactionController::class);
     Route::resource('log', LogController::class);
     Route::resource('settings', SettingController::class);
+
+
+    Route::get("items/feature/create",[ItemController::class,'createFeature'])->name('item.feature.create');
+    Route::post("items/feature/store",[ItemController::class,'storeFeature'])->name('item.feature.store');
 });
 
 

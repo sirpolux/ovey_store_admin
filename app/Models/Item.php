@@ -29,4 +29,8 @@ class Item extends Model
     public function updatedBy(){
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    public function featureSpecifications(){
+        return $this->hasMany(FeatureSpecification::class, 'item_id');
+    }
 }
