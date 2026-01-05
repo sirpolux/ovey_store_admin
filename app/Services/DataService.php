@@ -37,9 +37,9 @@ class DataService{
         return $orderPendinfg;
     }
 
-    public function allCustomers(){
-        return User::where('user_type', 'customer')->count();
-    }
+    // public function allCustomers(){
+    //     return User::where('user_type', 'customer')->count();
+    // }
 
     public function transactionComputation(){
 
@@ -75,18 +75,18 @@ class DataService{
         ->sum('amount');
     }
 
-    public function totalApprovedTransactionsEvent(){
-        return Transaction::where('transaction_status', 'APPROVED')
-                            ->where('purpose', 'RETREAT BOOKING')
-                            ->sum('amount');
-    }
+    // public function totalApprovedTransactionsEvent(){
+    //     return Transaction::where('transaction_status', 'APPROVED')
+    //                         ->where('purpose', 'RETREAT BOOKING')
+    //                         ->sum('amount');
+    // }
 
-    public function totalApprovedTransactionsBookStore(){
-        return Transaction::where('transaction_status', 'APPROVED')
-        ->orWhere("transaction_status", "PAID")
-        ->where('purpose', 'BOOK PURCHASE')
-        ->sum('amount');
-    }
+    // public function totalApprovedTransactionsBookStore(){
+    //     return Transaction::where('transaction_status', 'APPROVED')
+    //     ->orWhere("transaction_status", "PAID")
+    //     ->where('purpose', 'BOOK PURCHASE')
+    //     ->sum('amount');
+    // }
 
 
 

@@ -60,11 +60,11 @@ export default function DashboardLayout({ children}) {
 
                         {/* Brand */}
                         <div className="text-center mb-6">
-                            <img
+                            {/* <img
                                 src="/img/logo_small.jpg"
                                 alt="Logo"
                                 className="mx-auto w-20 rounded-lg shadow"
-                            />
+                            /> */}
                             <h2 className="mt-3 font-bold text-lg tracking-wide">Ovey Store</h2>
                             <p className="text-xs text-gray-500">Admin Panel</p>
                         </div>
@@ -115,7 +115,7 @@ export default function DashboardLayout({ children}) {
                     </header>
 
                     {/* Page Container */}
-                    <section className="p-4 md:p-6 overflow-y-auto flex-1">
+                    <section className="p-4 md:p-1 overflow-y-auto flex-1">
                         <div className="bg-white shadow-lg rounded-lg p-6 h-[95vh] overflow-y-auto border border-gray-100">
                             {children}
                         </div>

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('channel')->nullable();  
             $table->text('description')->nullable();
             $table->json('meta')->nullable();
-            $table->foreignId('user_id')->constrained('users')->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('ip_address')->nullable();
             $table->text('user_agent')->nullable();
             $table->timestamps();

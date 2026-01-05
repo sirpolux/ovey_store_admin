@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('feature_specifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('item_id')->constrained('items')->nullOnDelete();
+            $table->foreignId('item_id')->constrained('items')->cascadeOnDelete();
             $table->string('feature_name');
             $table->text('feature_value')->nullable();
             $table->text('feature_description')->nullable();

@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('inventories', function (Blueprint $table) {
+        Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->string('item_id')->nullable()->unique();
             $table->string('item_name');
-            $table->text('item_decription')->nullable();
+            $table->text('item_description')->nullable();
             $table->string('manufacturer')->nullable();
             $table->integer('quantity')->default(0);
             $table->double('price')->default(0);
-            $table->string('status')->default('IN_STOCK');
-            $table->foreignId('updated_by')->constrained('users')->nullOnDelete();
-            $table->foreignId('created_by')->constrained('users')->nullOnDelete();
+            $table->enum('status',['IN_STOCK', 'OUT_OF_STOCK', 'DISCONTINUED'])->default('OUT_OF_STOCK');
+            $table->boolean('is_deleted')->default(false);
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('inventories');
+        Schema::dropIfExists('items');
     }
 };

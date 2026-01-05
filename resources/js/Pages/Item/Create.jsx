@@ -78,7 +78,7 @@ export default function Create({ response = null , breadcrumbs}) {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="text-3xl font-bold text-gray-800  mb-8 flex items-center gap-3"
+                        className="text-xl font-bold text-gray-800  mb-8 flex items-center gap-3"
                     >
                         <Boxes className="text-green-600" /> Add New Inventory Item
                     </motion.h2>

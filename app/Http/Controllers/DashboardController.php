@@ -15,7 +15,7 @@ class DashboardController extends Controller
     public function index(DataService $dataService)
     {
         // Example data — replace with real queries later
-        $allUsers = $dataService->allCustomers();
+        //$allUsers = $dataService->allCustomers();
         $allOrders =  $dataService->orderStatus('all');
         $completedOrders = $dataService->orderStatus('COMPLETED');
         $pendingOrders = $dataService->pendingOrders();
@@ -23,14 +23,14 @@ class DashboardController extends Controller
         $pendingTransactions = $dataService->pendingTransaction();
         $completedTransaction = $dataService->completedTransaction();
         $inventoryItems = $dataService->inventoryItemsCount();
-        $totalApprovedTransactionsEvent = $dataService->totalApprovedTransactionsEvent();
-        $totalApprovedTransactionsBookStore =  $dataService->totalApprovedTransactionsBookStore();
+      //  $totalApprovedTransactionsEvent = $dataService->totalApprovedTransactionsEvent();
+      //  $totalApprovedTransactionsBookStore =  $dataService->totalApprovedTransactionsBookStore();
         $totalApprovedTransactions = $dataService->totalApprovedTransactions();
  
         
 
         return inertia("Dashboard/Home", [
-            'allUsers'=>$allUsers,
+           // 'allUsers'=>$allUsers,
             'allOrders'=>$allOrders,
             'completedOrders'=>$completedOrders,
             'pendingOrders'=>$pendingOrders,
@@ -39,8 +39,8 @@ class DashboardController extends Controller
             'completedTransaction'=>$completedTransaction,
             'inventoryItems'=>$inventoryItems,
             'totalApprovedTransactions'=>$totalApprovedTransactions,
-            'totalApprovedTransactionsEvent'=>  $totalApprovedTransactionsEvent,
-            'totalApprovedTransactionsBookStore' => $totalApprovedTransactionsBookStore,
+           // 'totalApprovedTransactionsEvent'=>  $totalApprovedTransactionsEvent,
+            //'totalApprovedTransactionsBookStore' => $totalApprovedTransactionsBookStore,
         ]);
     }
 }

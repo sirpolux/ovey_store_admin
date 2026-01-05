@@ -30,9 +30,10 @@ export default function Index({ stocks, queryParams = {}, breadcrumbs }) {
   return (
     <DashboardLayout>
       <Head title="Stock History" />
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
 
       <div className="p-6 space-y-6">
-        <Breadcrumbs breadcrumbs={breadcrumbs} />
+      
 
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
