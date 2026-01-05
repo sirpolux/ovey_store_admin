@@ -1,123 +1,153 @@
-import Breadcrumbs from "@/Components/Breadcrumb";
-import DashboardLayout from "../DashboardLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
-import { PlusIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import Breadcrumbs from "@/Components/Breadcrumb";
+import Pagination from "@/Components/Pagination";
+import DashboardLayout from "../DashboardLayout";
+import toast from "react-hot-toast";
 
-export default function Index({ stocks, queryParams, breadcrumbs }) {
+export default function Index({ stocks, queryParams = {}, breadcrumbs }) {
   const { data, setData, get, processing } = useForm({
-    keyword: queryParams?.keyword || "",
-    start_date: queryParams?.start_date || "",
-    end_date: queryParams?.end_date || "",
-    per_page: queryParams?.per_page || stocks.per_page || 20,
+    keyword: queryParams.keyword || "",
+    start_date: queryParams.start_date || "",
+    end_date: queryParams.end_date || "",
+    per_page: queryParams.per_page || 20,
   });
 
-  const submitFilters = () => {
+  const applyFilters = () => {
     get(route("stock.index"), {
       preserveState: true,
       replace: true,
     });
   };
 
-  const handleChange = (key, value) => {
-    setData(key, value);
-    submitFilters();
+  const exportCsv = () => {
+    window.location.href = route("stock.export", {
+      ...data,
+    });
+    toast.success("CSV export Completed");
   };
 
   return (
     <DashboardLayout>
-      <Head title="Stock Management" />
+      <Head title="Stock History" />
 
       <div className="p-6 space-y-6">
         <Breadcrumbs breadcrumbs={breadcrumbs} />
 
-        {/* Header + Actions */}
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-gray-800">
-            Stock Management
-          </h1>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href={route("stock.create")}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
-            >
-              <PlusIcon className="w-4 h-4" />
-              Add Stock
-            </Link>
-
-            <Link
-              href={route("stock.export", data)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border text-gray-700 hover:bg-gray-50"
-            >
-              <ArrowDownTrayIcon className="w-4 h-4" />
-              Export CSV
-            </Link>
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-semibold text-gray-800">
+              Stock History
+            </h1>
+            <p className="text-sm text-gray-500">
+              View stock captured within a selected period.
+            </p>
           </div>
+
+          {/* Export */}
+          <button
+            onClick={exportCsv}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition"
+          >
+            <ArrowDownTrayIcon className="w-4 h-4" />
+            Export CSV
+          </button>
         </div>
 
         {/* Filters */}
-        <div className="bg-white border rounded-xl p-4 grid grid-cols-1 md:grid-cols-5 gap-4">
-          <input
-            type="text"
-            placeholder="Search item, added by..."
-            value={data.keyword}
-            onChange={(e) => handleChange("keyword", e.target.value)}
-            className="rounded-lg border px-3 py-2 text-sm"
-          />
+        <div className="bg-white rounded-xl border p-4 grid grid-cols-1 md:grid-cols-5 gap-4">
+          {/* Search */}
+          <div className="md:col-span-2">
+            <label className="text-xs font-medium text-gray-600">
+              Search
+            </label>
+            <div className="relative">
+              <MagnifyingGlassIcon className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+              <input
+                type="text"
+                value={data.keyword}
+                onChange={(e) => setData("keyword", e.target.value)}
+                placeholder="Item name..."
+                className="w-full pl-9 pr-3 py-2 rounded-lg border text-sm focus:ring-1 focus:ring-indigo-500"
+              />
+            </div>
+          </div>
 
-          <input
-            type="date"
-            value={data.start_date}
-            onChange={(e) => handleChange("start_date", e.target.value)}
-            className="rounded-lg border px-3 py-2 text-sm"
-          />
+          {/* Start Date */}
+          <div>
+            <label className="text-xs font-medium text-gray-600">
+              Start Date
+            </label>
+            <input
+              type="date"
+              value={data.start_date}
+              onChange={(e) => setData("start_date", e.target.value)}
+              className="w-full rounded-lg border px-3 py-2 text-sm"
+            />
+          </div>
 
-          <input
-            type="date"
-            value={data.end_date}
-            onChange={(e) => handleChange("end_date", e.target.value)}
-            className="rounded-lg border px-3 py-2 text-sm"
-          />
+          {/* End Date */}
+          <div>
+            <label className="text-xs font-medium text-gray-600">
+              End Date
+            </label>
+            <input
+              type="date"
+              value={data.end_date}
+              onChange={(e) => setData("end_date", e.target.value)}
+              className="w-full rounded-lg border px-3 py-2 text-sm"
+            />
+          </div>
 
-          <select
-            value={data.per_page}
-            onChange={(e) => handleChange("per_page", e.target.value)}
-            className="rounded-lg border px-3 py-2 text-sm"
-          >
-            {[10, 20, 50, 100].map((n) => (
-              <option key={n} value={n}>
-                {n} per page
-              </option>
-            ))}
-          </select>
+          {/* Per Page */}
+          <div>
+            <label className="text-xs font-medium text-gray-600">
+              Per Page
+            </label>
+            <select
+              value={data.per_page}
+              onChange={(e) => setData("per_page", e.target.value)}
+              className="w-full rounded-lg border px-3 py-2 text-sm"
+            >
+              {[10, 20, 50, 100].map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Apply */}
+          <div className="md:col-span-5 flex justify-end">
+          <Link 
+          className="mr-4 px-5 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition"
+            href={route('stock.create')}
+            >Add Stock</Link>
+            <button
+              onClick={applyFilters}
+              disabled={processing}
+              className="px-5 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition disabled:opacity-50"
+            >
+              Apply Filters
+            </button>
+           
+          </div>
         </div>
 
         {/* Table */}
-        <div className="bg-white border rounded-xl overflow-hidden">
-          {stocks.data.length === 0 ? (
-            <div className="p-10 text-center text-gray-500">
-              <p className="mb-4">No stock records found.</p>
-
-              <Link
-                href={route("stock.create")}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
-              >
-                <PlusIcon className="w-4 h-4" />
-                Add Stock
-              </Link>
-            </div>
-          ) : (
+        <div className="bg-white rounded-xl border overflow-hidden">
+          {stocks.data.length > 0 ? (
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b">
-                <tr className="text-left text-gray-600">
-                  <th className="px-4 py-3">Item Name</th>
-                  <th className="px-4 py-3">Quantity</th>
-                  <th className="px-4 py-3">Price</th>
-                  <th className="px-4 py-3">Added By</th>
-                  <th className="px-4 py-3">Date Added</th>
+              <thead className="bg-gray-50 text-gray-600">
+                <tr>
+                  <th className="px-4 py-3 text-left">Item</th>
+                  <th className="px-4 py-3 text-left">Quantity</th>
+                  <th className="px-4 py-3 text-left">Price</th>
+                  <th className="px-4 py-3 text-left">Added By</th>
+                  <th className="px-4 py-3 text-left">Date Added</th>
                 </tr>
               </thead>
-
               <tbody className="divide-y">
                 {stocks.data.map((stock) => (
                   <tr key={stock.id} className="hover:bg-gray-50">
@@ -125,10 +155,10 @@ export default function Index({ stocks, queryParams, breadcrumbs }) {
                       {stock.item_name}
                     </td>
                     <td className="px-4 py-3">{stock.quantity}</td>
+                    <td className="px-4 py-3">₦{stock.price}</td>
                     <td className="px-4 py-3">
-                      ₦{Number(stock.price).toLocaleString()}
+                      {stock.added_by}
                     </td>
-                    <td className="px-4 py-3">{stock.added_by}</td>
                     <td className="px-4 py-3 text-gray-500">
                       {stock.created_at}
                     </td>
@@ -136,25 +166,17 @@ export default function Index({ stocks, queryParams, breadcrumbs }) {
                 ))}
               </tbody>
             </table>
+          ) : (
+            <div className="py-20 text-center text-gray-500">
+              No stock records found for the selected criteria.
+            </div>
           )}
         </div>
 
         {/* Pagination */}
-        {stocks.links.length > 1 && (
-          <div className="flex justify-end gap-2">
-            {stocks.links.map((link, index) => (
-              <Link
-                key={index}
-                href={link.url || ""}
-                preserveState
-                className={`px-3 py-1 rounded text-sm ${
-                  link.active
-                    ? "bg-indigo-600 text-white"
-                    : "border hover:bg-gray-100"
-                } ${!link.url && "opacity-50 cursor-not-allowed"}`}
-                dangerouslySetInnerHTML={{ __html: link.label }}
-              />
-            ))}
+        {stocks.links && (
+          <div className="flex justify-center">
+            <Pagination links={stocks.links} queryParams={data} />
           </div>
         )}
       </div>

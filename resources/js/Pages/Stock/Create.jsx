@@ -1,5 +1,3 @@
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import AdminDashboard from "../AdminDashboard";
 import { Head, useForm } from "@inertiajs/react";
 import SelectInput from "@/Components/SelectInput";
 import InputLabel from "@/Components/InputLabel";
@@ -10,13 +8,15 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { ImageIcon, PackageSearch } from "lucide-react"; // icons
 import { ClipLoader } from "react-spinners";
+import DashboardLayout from "../DashboardLayout";
+import Breadcrumbs from "@/Components/Breadcrumb";
 
-export default function Create({ items, selectedItem }) {
+export default function Create({ items, selectedItem, breadcrumbs }) {
     const { data, setData, post, errors, reset, processing } = useForm({
         item_id: selectedItem? selectedItem.data.id:'',
         quantity: '',
-        item_price: '',
-        supplied_by: '',
+        price: '',
+        supplied_by: 'Self Purchase',
         item_name: selectedItem?selectedItem.data.title:'',
         image: null
     });
@@ -53,12 +53,14 @@ export default function Create({ items, selectedItem }) {
 
     const options = items.data.map(item => ({
         value: item.id,
-        label: item.title_author,
+        label: item.item_name,
     }));
 
     return (
-        <AdminDashboard>
+        <DashboardLayout>
             <Head title="Items" />
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+
             <div className="p-8">
                 <div className="bg-white p-6 md:p-6">
                     <div className="rounded-lg p-6 overflow-scroll max-h-[45rem]">
@@ -85,14 +87,14 @@ export default function Create({ items, selectedItem }) {
                             <div className="mt-3">
                                 <InputLabel htmlFor="item_price" value="Price *" />
                                 <TextInput
-                                    name="item_price"
-                                    value={data.item_price}
-                                    onChange={e => setData('item_price', e.target.value)}
+                                    name="price"
+                                    value={data.price}
+                                    onChange={e => setData('price', e.target.value)}
                                     className="block w-full mt-2"
                                     type="number"
                                     isFocused={true}
                                 />
-                                <InputError className="text-red-600" message={errors.item_price} />
+                                <InputError className="text-red-600" message={errors.price} />
                             </div>
 
                             {/* Quantity */}
@@ -155,6 +157,6 @@ export default function Create({ items, selectedItem }) {
                     </div>
                 </div>
             </div>
-        </AdminDashboard>
+        </DashboardLayout>
     );
 }

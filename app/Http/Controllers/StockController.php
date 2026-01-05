@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreStockRequest;
 use App\Http\Requests\UpdateStockRequest;
+use App\Http\Resources\ItemBaseResource;
+use App\Http\Resources\ItemResource;
 use App\Models\Item;
 use App\Models\Stock;
 use Illuminate\Support\Facades\Auth;
@@ -88,7 +90,11 @@ class StockController extends Controller
         //
         $items = Item::select('id', 'item_name')->where('is_deleted', false)->get();
         return inertia('Stock/Create', [
-            'items' => $items,
+            'items' =>  ItemBaseResource::collection($items),
+            "breadcrumbs" => [
+                ['label' => 'Stocks', 'url' => route('stock.index')],
+                ['label' => 'Add Stock', 'url' => route('stock.create')],
+            ],
         ]);
     }
 
@@ -98,15 +104,23 @@ class StockController extends Controller
     public function store(StoreStockRequest $request)
     {
         //
+        //dd($request->all());
         $user = Auth::user();
         $data = [
             'item_id' => $request->item_id,
             'quantity' => $request->quantity,
-            'price' => $request->price,
-            'status' => $request->status,
+            'price' => $request->price, 
+            'status' => $request->status ?? 'IN_STOCK',
+           'supplier' => $request->supplied_by ?? 'Self Purchase',
             'added_by' => $user->id,
         ];
-        Stock::create($data);
+        $stock = Stock::create($data);
+        //update item quantity
+        $item = $stock->item;
+        $item->quantity += $stock->quantity;
+        $item->status = "IN_STOCK";
+        $item->save();
+        return redirect()->route('stock.index')->with('message', 'Stock added successfully')->with('status', 'success');
     }
 
     /**
@@ -143,6 +157,7 @@ class StockController extends Controller
 
     public function export()
     {
+      
         $keyword       = request('keyword');
         $startDate     = request('start_date');
         $endDate       = request('end_date');

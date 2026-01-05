@@ -12,11 +12,10 @@ class Stock extends Model
     protected $fillable = [
         'item_id',
         'quantity',
-        'received_date',
-        'expiry_date',
-        'batch_number',
-        'created_by',
-        'updated_by',
+        'price',
+        'status',
+        'supplier',
+        'added_by',
     ];
 
     public function item()

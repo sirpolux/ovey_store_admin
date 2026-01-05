@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('item', ItemController::class);
     Route::resource('user', UserController::class);
+    Route::get('/stock/export', [StockController::class, 'export'])->name('stock.export');
     Route::resource('stock', StockController::class);
     Route::resource('cart', CartController::class);
     Route::resource('order', OrderController::class);
@@ -46,8 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get("item/feature/create/{id}", [ItemController::class, 'createFeature'])->name('item.feature.create');
     Route::post("items/feature/store", [ItemController::class, 'storeFeature'])->name('item.feature.store');
     // routes/web.php
-    Route::get('/stock/export', [StockController::class, 'export'])
-        ->name('stock.export');
+   
 });
 
 

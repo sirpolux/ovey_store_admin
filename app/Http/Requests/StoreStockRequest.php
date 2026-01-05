@@ -26,6 +26,7 @@ class StoreStockRequest extends FormRequest
             'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
             'status' => 'nullable|string|in:IN_STOCK,OUT_OF_STOCK,DISCONTINUED',
+            'supplied_by' => 'nullable|string|max:255',
         ];
     }
 }
