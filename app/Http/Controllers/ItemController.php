@@ -196,6 +196,7 @@ class ItemController extends Controller
             "item"=>new ItemResource($item),
             'breadcrumbs' => [
                 ['label' => 'Items', 'url' => route('item.index')],
+                ['label' => 'View Item', 'url' => route('item.show', $item->id)],
                 ['label' => 'Create Feature', 'url' => route('item.feature.create', $item->id)],
             ],
         ]);       
@@ -226,5 +227,17 @@ class ItemController extends Controller
             "message"=>"Features added successfully",
             "status"=>"success"
         ]);
+    }
+
+    public function addImage($id){
+        $item = Item::findOrFail($id);
+        return inertia('Item/AddImage', [
+            "item"=>new ItemResource($item),
+            'breadcrumbs' => [
+                ['label' => 'Items', 'url' => route('item.index')],
+                ['label' => 'View Item', 'url' => route('item.show', $item->id)],
+                ['label' => 'Add Image', 'url' => route('item.image.add', $item->id)],
+            ],
+        ]);       
     }
 }

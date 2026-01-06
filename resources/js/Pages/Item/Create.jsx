@@ -154,7 +154,7 @@ export default function Create({ response = null , breadcrumbs}) {
                         </div>
 
                         {/* Image Upload */}
-                        <motion.div
+                        {/* <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}
@@ -186,7 +186,7 @@ export default function Create({ response = null , breadcrumbs}) {
                                     />
                                 )}
                             </AnimatePresence>
-                        </motion.div>
+                        </motion.div> */}
 
                         {/* Submit */}
                         <motion.div

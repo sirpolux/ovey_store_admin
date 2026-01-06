@@ -8,6 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import DashboardLayout from "../DashboardLayout";
 import Breadcrumbs from "@/Components/Breadcrumb";
+import { Plus } from "lucide-react";
 
 
 export default function Show({ item, auth, breadcrumbs }) {
@@ -105,6 +106,38 @@ export default function Show({ item, auth, breadcrumbs }) {
           <p className="text-gray-600">
             {data.item_description || "No description provided."}
           </p>
+        </div>
+
+        
+        {/* Description */}
+        <div className="bg-white  rounded-xl border p-6">
+          <h3 className="font-medium text-gray-700 mb-2">
+            Images
+          </h3>
+          <div className="flex flex-wrap gap-4">
+            {data.images && data.images.length > 0 ? (
+              data.images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`Item Image ${index + 1}`}
+                  className="w-32 h-32 object-cover rounded-lg border"
+                />
+              ))
+            ) : (
+              <p className="text-gray-600">
+                No images available for this item.
+                <br/>
+                <br/>
+                <Link
+                  href={route("item.image.add", data.id)}
+                  className=" hover:text-emerald-800 ml-1  border p-2 mt-4 text-gray-700 border-emerald-600 rounded-lg "
+                >
+                  <Plus className="w-4 h-4 mr-1 inline" /> Add Images
+                </Link>
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Features */}

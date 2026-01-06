@@ -42,7 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('transactions', TransactionController::class);
     Route::resource('log', LogController::class);
     Route::resource('settings', SettingController::class);
-
+    Route::get('item/image/add/{id}', [ItemController::class, 'addImage'])->name('item.image.add');
+    Route::post('item/image/store', [ItemController::class, 'storeImage'])->name('item.image.store');
 
     Route::get("item/feature/create/{id}", [ItemController::class, 'createFeature'])->name('item.feature.create');
     Route::post("items/feature/store", [ItemController::class, 'storeFeature'])->name('item.feature.store');
