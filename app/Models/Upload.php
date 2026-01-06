@@ -20,4 +20,9 @@ class Upload extends Model
         'position',
         'uploaded_by',
     ];
+
+    public function item(){
+        return $this->belongsTo(Item::class, 'item_id');
+    }
+    
 }

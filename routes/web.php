@@ -3,6 +3,7 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ItemImageController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
@@ -33,7 +34,21 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::post("item/feature/store", [ItemController::class, 'storeFeature'])->name('item.feature.store');
+    Route::post("item/feature/store", [ItemController::class, 'storeFeature'])->name('item.feature.store');
+
+    Route::prefix('item/image')->group(function () {
+    Route::post('{item}', [ItemImageController::class, 'store'])
+        ->name('item.image.store');
+
+    Route::delete('{image}', [ItemImageController::class, 'destroy'])
+        ->name('item.image.delete');
+
+    Route::patch('{image}/primary', [ItemImageController::class, 'setPrimary'])
+        ->name('item.image.primary');
+
+    Route::patch('{item}/reorder', [ItemImageController::class, 'reorder'])
+        ->name('item.image.reorder');
+});
     Route::resource('item', ItemController::class);
     Route::resource('user', UserController::class);
     Route::get('/stock/export', [StockController::class, 'export'])->name('stock.export');
@@ -44,7 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('log', LogController::class);
     Route::resource('settings', SettingController::class);
     Route::get('item/image/add/{id}', [ItemController::class, 'addImage'])->name('item.image.add');
-    Route::post('item/image/store/{id}', [ItemController::class, 'storeImage'])->name('item.image.store');
+ //   Route::post('item/image/store/{id}', [ItemController::class, 'storeImage'])->name('item.image.store');
 
     Route::get("item/feature/create/{id}", [ItemController::class, 'createFeature'])->name('item.feature.create');
 
