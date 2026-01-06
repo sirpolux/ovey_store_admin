@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::post("item/feature/store", [ItemController::class, 'storeFeature'])->name('item.feature.store');
     Route::resource('item', ItemController::class);
     Route::resource('user', UserController::class);
     Route::get('/stock/export', [StockController::class, 'export'])->name('stock.export');
@@ -43,10 +44,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('log', LogController::class);
     Route::resource('settings', SettingController::class);
     Route::get('item/image/add/{id}', [ItemController::class, 'addImage'])->name('item.image.add');
-    Route::post('item/image/store', [ItemController::class, 'storeImage'])->name('item.image.store');
+    Route::post('item/image/store/{id}', [ItemController::class, 'storeImage'])->name('item.image.store');
 
     Route::get("item/feature/create/{id}", [ItemController::class, 'createFeature'])->name('item.feature.create');
-    Route::post("items/feature/store", [ItemController::class, 'storeFeature'])->name('item.feature.store');
+
     // routes/web.php
    
 });

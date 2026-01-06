@@ -231,6 +231,7 @@ class ItemController extends Controller
 
     public function addImage($id){
         $item = Item::findOrFail($id);
+        $item->load(['uploads']);
         return inertia('Item/AddImage', [
             "item"=>new ItemResource($item),
             'breadcrumbs' => [
@@ -240,4 +241,31 @@ class ItemController extends Controller
             ],
         ]);       
     }
+
+    public function storeImage(Request $request){
+        dd($request->all());
+        $request->validate([
+            "item_id"=>"required|exists:items,id",
+            "images.*"=>"required|image|max:2048", // max 2MB per image
+        ]);
+
+        $item = Item::findOrFail($request->item_id);
+       
+        if($request->hasFile('images')){
+            foreach($request->file('images') as $image){
+                $path = $image->store('uploads/items', 'public');
+                $item->uploads()->create([
+                    "file_name"=>$image->getClientOriginalName(),
+                    "file_path"=>$path,
+                    "file_type"=>$image->getClientMimeType(),
+                    "uploaded_by"=>Auth::id(),
+                ]);
+            }
+        }
+
+        return to_route('item.show', $item->id)->with([
+            "message"=>"Images uploaded successfully",
+            "status"=>"success"
+        ]);
+    }   
 }

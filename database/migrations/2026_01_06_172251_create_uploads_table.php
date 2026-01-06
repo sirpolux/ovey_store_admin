@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('file_name');
             $table->string('file_path');
             $table->string('file_type')->nullable();
+            $table->boolean('is_primary')->nullable();
+            $table->integer('position')->nullable()->default(0);
             $table->foreignId('uploaded_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });

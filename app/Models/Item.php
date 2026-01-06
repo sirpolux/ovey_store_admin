@@ -33,4 +33,7 @@ class Item extends Model
     public function featureSpecifications(){
         return $this->hasMany(FeatureSpecification::class, 'item_id');
     }
+    public function uploads(){
+        return $this->hasMany(Upload::class, 'item_id');
+    }
 }

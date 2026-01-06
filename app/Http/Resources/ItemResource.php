@@ -24,6 +24,7 @@ class ItemResource extends JsonResource
             'price' => $this->price,
             'status' => $this->status,
             "features" => FeatureSpecificationResource::collection($this->whenLoaded('featureSpecifications')),
+            "uploads" => UploadResource::collection($this->whenLoaded('uploads')),
             'created_by' => new UserResource($this->whenLoaded('createdBy')),
             'updated_by' => new UserResource($this->whenLoaded('updatedBy')),
             'created_at' => $this->created_at,
