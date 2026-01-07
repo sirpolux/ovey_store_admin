@@ -38,7 +38,8 @@ class ItemImageController extends Controller
             $existingCount
         ) {
             foreach ($request->file('images') as $index => $file) {
-               // dd($file);
+              // // dd($file);
+              // dd($cloudinary);
                 $uploaded = $cloudinary->upload($file, 'ovey_store');
 
                 Upload::create([
