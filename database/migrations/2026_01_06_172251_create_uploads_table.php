@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('item_id')->nullable()->constrained('items')->cascadeOnDelete();
             $table->foreignId('transaction_id')->nullable()->constrained('transactions')->nullOnDelete();
-            $table->string('file_name');
+            $table->string('public_id')->nullable();
             $table->string('file_path');
             $table->string('file_type')->nullable();
             $table->boolean('is_primary')->nullable();

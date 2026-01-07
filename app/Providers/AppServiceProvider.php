@@ -24,9 +24,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Vite::prefetch(concurrency: 3);
         Inertia::share([
-            'cloudinary' => fn () => Auth::check()
-            ? ['cloudName' => env('CLOUDINARY_CLOUD_NAME')]
-            : null,
+          
         ]);
     }
 }

@@ -6,11 +6,11 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class CloudinaryService
 {
-    public function upload($file, string $folder = 'items')
+    public function upload($file, string $folder = 'ovey_store')
     {
-        $result = Cloudinary::upload(
+        $result = Cloudinary::uploadFile(
             $file->getRealPath(),
-            ['folder' => $folder]
+            ["folder" => $folder]
         );
 
         return [
@@ -23,6 +23,4 @@ class CloudinaryService
     {
         Cloudinary::destroy($publicId);
     }
-    
 }
-

@@ -16,7 +16,7 @@ class ItemImageController extends Controller
         Item $item,
         CloudinaryService $cloudinary
     ) {
-        dd($request->all());
+    
         $request->validate([
             'images' => ['required', 'array'],
             'images.*' => ['image', 'max:2048'],
@@ -38,11 +38,12 @@ class ItemImageController extends Controller
             $existingCount
         ) {
             foreach ($request->file('images') as $index => $file) {
-                $uploaded = $cloudinary->upload($file, 'items');
+               // dd($file);
+                $uploaded = $cloudinary->upload($file, 'ovey_store');
 
                 Upload::create([
                     'item_id' => $item->id,
-                    'url' => $uploaded['url'],
+                    'file_path' => $uploaded['url'],
                     'public_id' => $uploaded['public_id'],
                     'position' => $existingCount + $index,
                     'is_primary' => $item->uploads()->count() === 0,

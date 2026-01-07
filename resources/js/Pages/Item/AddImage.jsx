@@ -56,6 +56,9 @@ export default function AddImage({ item, breadcrumbs }) {
     post(route("item.image.store", item.data.id), {
       forceFormData: true,
       preserveScroll: true,
+      onError: () => {
+        toast.errors(errors);
+      }
     });
   };
 
