@@ -121,6 +121,7 @@ class ItemController extends Controller
     {
         //
         $item->load(['featureSpecifications']);
+        $item->load(['uploads']);
         return inertia('Item/Show', [
             'item'=>new ItemResource($item->load(['createdBy', 'updatedBy'])),
             "breadcrumbs" => [

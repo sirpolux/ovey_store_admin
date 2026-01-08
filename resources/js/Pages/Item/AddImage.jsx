@@ -96,7 +96,7 @@ export default function AddImage({ item, breadcrumbs }) {
                   className="relative border rounded-lg overflow-hidden"
                 >
                   <img
-                    src={img.url}
+                    src={img.file_path}
                     alt=""
                     className="h-32 w-full object-cover"
                   />
