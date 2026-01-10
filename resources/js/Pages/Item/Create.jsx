@@ -14,7 +14,7 @@ import Breadcrumbs from "@/Components/Breadcrumb";
 
 export default function Create({ response = null , breadcrumbs}) {
     const { cloudinary } = usePage().props;
-    const cloudName = cloudinary.cloudName;
+    // const cloudName = cloudinary.cloudName;
 
     const [imagePreview, setImagePreview] = useState(null);
     const { data, setData, post, errors, reset } = useForm({
@@ -25,37 +25,37 @@ export default function Create({ response = null , breadcrumbs}) {
         status: "",
     });
 
-    const handleFileUpload = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+    // const handleFileUpload = async (e) => {
+    //     const file = e.target.files[0];
+    //     if (!file) return;
 
-        const reader = new FileReader();
-        reader.onload = () => setImagePreview(reader.result);
-        reader.readAsDataURL(file);
+    //     const reader = new FileReader();
+    //     reader.onload = () => setImagePreview(reader.result);
+    //     reader.readAsDataURL(file);
 
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", "ave_mater");
+    //     const formData = new FormData();
+    //     formData.append("file", file);
+    //     formData.append("upload_preset", "ave_mater");
 
-        try {
-            const res = await axios.post(
-                `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-                formData
-            );
+    //     try {
+    //         const res = await axios.post(
+    //             `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+    //             formData
+    //         );
 
-            setData("image", res.data.secure_url);
-        } catch (error) {
-            console.error("Cloudinary upload failed", error);
-        }
-    };
+    //         setData("image", res.data.secure_url);
+    //     } catch (error) {
+    //         console.error("Cloudinary upload failed", error);
+    //     }
+    // };
 
     const onSubmit = (e) => {
         e.preventDefault();
         post(route("item.store"), {
-            data,
+            //data,
             onSuccess: () => {
-                reset();
                 toast.success("Item successfully added to inventory");
+                reset();
                 window.scrollTo({ top: 0, behavior: "smooth" });
             },
             onError: () => toast.error("Failed to add item. Check input."),

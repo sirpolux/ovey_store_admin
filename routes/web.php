@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\LogController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
@@ -48,7 +50,35 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('{item}/reorder', [ItemImageController::class, 'reorder'])
         ->name('item.image.reorder');
+
+
+        Route::prefix('settings')->group(function () {
+            Route::get("/type", [SettingsController::class, 'typeIndex'])->name('settings.type');
+            Route::get("/list", [SettingsController::class,'settingList'])->name('setting.list');
+            Route::post("/save", [SettingsController::class, 'saveSettings'])->name("settings.save");
+            Route::post("/setup/primary", [SettingsController::class, 'setUpPrimary'])->name('setup.primary');
+            Route::get("/bank/list", [AccountController::class, 'bankList'])->name('settings.bank.list');
+    
+            Route::get("/cart/list", [SettingsController::class, 'cartSettingList'])->name('settings.cart.list');
+            Route::get("/cart/add", [SettingsController::class, 'cartSettingAdd'])->name('settings.cart.add');
+            Route::post("/cart/save", [SettingsController::class, "cartSettingSave"])->name("settings.cart.save");
+            Route::post("/cart/setup/primary", [SettingsController::class, "setUpPrimaryCartSettings"])->name("setup.primary.cart");
+    
+    
+    
+            Route::get("/retreat/list", [SettingsController::class, 'retreatSettingList'])->name('settings.retreat.list');
+            Route::get("/retreat/add", [SettingsController::class, 'retreatSettingAdd'])->name('settings.retreat.add');
+            Route::post("/retreat/save", [SettingsController::class, "retreatSettingSave"])->name("settings.retreat.save");
+            Route::post("/retreat/setup/primary", [SettingsController::class, "setUpPrimaryRetreatSettings"])->name("setup.primary.retreat");
+    
+    
+            Route::post("/bank/setup/primary", [AccountController::class, 'setPrimaryBank'])->name("bank.setup.primary");
+            Route::resource('bank', AccountController::class);
+         
+        });
 });
+
+
     Route::resource('item', ItemController::class);
     Route::resource('user', UserController::class);
     Route::get('/stock/export', [StockController::class, 'export'])->name('stock.export');

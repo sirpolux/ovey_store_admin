@@ -141,6 +141,7 @@ class ItemController extends Controller
             'item'=>new ItemResource($item),
             'breadcrumbs' => [
                 ['label' => 'Items', 'url' => route('item.index')],
+                ['label' => 'View Item', 'url' => route('item.show', $item->id)],
                 ['label' => 'Edit Item', 'url' => route('item.edit', $item->id)],
             ],
         ]);
