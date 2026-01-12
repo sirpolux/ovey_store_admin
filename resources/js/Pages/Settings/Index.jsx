@@ -6,7 +6,8 @@ import {
   Package,
   CalendarDays,
 } from "lucide-react";
-import AdminDashboard from "../AdminDashboard";
+
+import DashboardLayout from "../DashboardLayout";
 
 const settingsList = [
 //   {
@@ -38,18 +39,18 @@ const settingsList = [
   //   icon: <Package className="w-5 h-5 text-purple-600" />,
   //   link:"settings/type?type=order",
   // },
-  {
-    key: "event",
-    title: "Retreat Settings",
-    description: "Manage event preferences, schedules, and reminders.",
-    icon: <CalendarDays className="w-5 h-5 text-red-600" />,
-    link:"settings/type?type=retreat",
-  },
+  // {
+  //   key: "event",
+  //   title: "Retreat Settings",
+  //   description: "Manage event preferences, schedules, and reminders.",
+  //   icon: <CalendarDays className="w-5 h-5 text-red-600" />,
+  //   link:"settings/type?type=retreat",
+  // },
 ];
 
 export default function Index() {
   return (
-    <AdminDashboard>
+    <DashboardLayout>
       <div className="p-6">
         <h2 className="text-2xl font-semibold mb-4">Settings Overview</h2>
         <p className="mb-6 text-gray-600">
@@ -72,6 +73,6 @@ export default function Index() {
           ))}
         </div>
       </div>
-    </AdminDashboard>
+    </DashboardLayout>
   );
 }

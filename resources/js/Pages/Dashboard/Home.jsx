@@ -1,4 +1,4 @@
-import Dashboard from "@/Pages/Dashboard";
+
 import DashboardLayout from "@/Pages/DashboardLayout";
 
 export default function Home() {
