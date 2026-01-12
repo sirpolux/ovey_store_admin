@@ -1,5 +1,4 @@
 import { useForm } from "@inertiajs/react";
-import AdminDashboard from "../AdminDashboard";
 import toast from "react-hot-toast";
 import {
   Banknote,
@@ -7,6 +6,8 @@ import {
   Hash,
   ArrowLeft,
 } from "lucide-react";
+import Dashboard from "../Dashboard";
+import DashboardLayout from "../DashboardLayout";
 
 export default function NewSetting() {
   const { data, setData, post, processing, errors, reset } = useForm({
@@ -33,7 +34,7 @@ export default function NewSetting() {
   const goBack = () => window.history.back();
 
   return (
-    <AdminDashboard>
+    <DashboardLayout>
       <div className="border border-gray-200 rounded-lg  shadow-sm transition duration-200  p-6 max-w-3xl">
         {/* Header with Back Arrow */}
         <div className="flex items-center gap-3 mb-6">
@@ -170,6 +171,6 @@ export default function NewSetting() {
           </div>
         </form>
       </div>
-    </AdminDashboard>
+    </DashboardLayout>
   );
 }

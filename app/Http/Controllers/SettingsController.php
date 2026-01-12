@@ -50,12 +50,28 @@ class SettingsController extends Controller
         $cartListSettings = Setting::where('type', 'cart')->get();
         return inertia("CartSettings/CartSettingList",
         [
-            "cartSettingList"=>$cartListSettings
+            "cartSettingList"=>$cartListSettings,
+            "breadcrumbs"=>[
+                [
+                   "label"=>"Cart Settings", "url"=>route("settings.cart.list")
+                ]
+            ],
         ]
         );
     }
     public function cartSettingAdd(){
-        return inertia("CartSettings/NewSetting");
+        return inertia("CartSettings/NewSetting",
+        [
+            "breadcrumbs"=>[
+                [
+                   "label"=>"Cart Settings", "url"=>route("settings.cart.list")
+                ],
+                [
+                   "label"=>"Add New Cart Setting", "url"=>route("settings.cart.add")
+                ],
+            ],
+        ]
+        );
     }
 
     public function cartSettingSave(Request $request){

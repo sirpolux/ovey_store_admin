@@ -11,7 +11,7 @@ class StoreAccountRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,6 +23,10 @@ class StoreAccountRequest extends FormRequest
     {
         return [
             //
+            'account_name' => 'required|string|max:255',
+            'account_number' => 'required|string|max:50|unique:accounts,account_number',
+            'bank_name' => 'required|string|max:255',
+            'sort_code' => 'nullable|string|max:255',
         ];
     }
 }

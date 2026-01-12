@@ -9,4 +9,14 @@ class Setting extends Model
 {
     /** @use HasFactory<\Database\Factories\SettingFactory> */
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'type',
+        'max',
+        'min',
+        'min_cost',
+        'max_cost',
+        'active',
+        'added_by',
+    ];
 }

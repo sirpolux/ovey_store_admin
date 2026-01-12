@@ -11,7 +11,7 @@ class StoreSettingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,6 +23,12 @@ class StoreSettingRequest extends FormRequest
     {
         return [
             //
+            'name' => 'required|string|max:255',
+            'type' => 'required|string|max:100',
+            'max' => 'nullable|numeric',
+            'min' => 'nullable|numeric',
+            'min_cost' => 'nullable|numeric',
+            'max_cost' => 'nullable|numeric',
         ];
     }
 }
