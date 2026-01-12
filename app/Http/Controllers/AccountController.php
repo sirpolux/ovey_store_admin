@@ -23,7 +23,16 @@ class AccountController extends Controller
      */
     public function create()
     {
-        return inertia("Bank/NewBank");
+        return inertia("Bank/NewBank", [
+            "breadcrumbs"=>[
+                [
+                   "label"=>"Bank Accounts", "url"=>route("settings.bank.list")
+                ],
+                [
+                   "label"=>"Add New Bank Account", "url"=>route("bank.create")
+                ],
+            ],  
+        ]);
     }
 
     /**
@@ -41,7 +50,12 @@ class AccountController extends Controller
         $bankList = Account::all();
         return inertia("Bank/BankList",
         [
-            "bankList"=>$bankList
+            "bankList"=>$bankList,
+            "breadcrumbs"=>[
+                [
+                   "label"=>"Bank Accounts", "url"=>route("settings.bank.list")
+                ]
+            ],
         ]
         );
     }

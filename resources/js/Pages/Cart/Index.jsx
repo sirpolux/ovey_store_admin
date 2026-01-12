@@ -1,12 +1,12 @@
 import { Head, Link } from "@inertiajs/react";
-import AdminDashboard from "../AdminDashboard";
 import { EyeIcon, ShoppingCartIcon, UserIcon } from "lucide-react";
 import Card from "@/Components/ui/Card";
 import CardContent from "@/Components/ui/CardContent";
+import DashboardLayout from "../DashboardLayout";
 
 export default function Index({ cart }) {
     return (
-        <AdminDashboard>
+        <DashboardLayout>
             <Head title="Customer Carts" />
 
             {/* Page Title */}
@@ -128,6 +128,6 @@ export default function Index({ cart }) {
                     ))}
                 </div>
             )}
-        </AdminDashboard>
+        </DashboardLayout>
     );
 }

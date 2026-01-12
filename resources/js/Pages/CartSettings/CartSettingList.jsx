@@ -1,31 +1,27 @@
 import React from "react";
-import { router } from "@inertiajs/react";
-import AdminDashboard from "../AdminDashboard";
-import { ArrowLeft, Star } from "lucide-react";
+import { router, Link } from "@inertiajs/react";
+import { ArrowLeft, Star, Settings } from "lucide-react";
 import toast from "react-hot-toast";
+import DashboardLayout from "../DashboardLayout";
 
 export default function CartSettingList({ cartSettingList }) {
-    
 
     const handleSetPrimary = (cart_settings_id) => {
         router.post(
             route("setup.primary.cart"),
             { cart_settings_id },
             {
-                onSuccess: () => {
-                    toast.success("Primary Cart Profile updated successfully.");
-                },
-                onError: () => {
-                    toast.error("Failed to update primary Cart Profile. Please try again.");
-                },
+                onSuccess: () => toast.success("Primary Cart Profile updated successfully."),
+                onError: () => toast.error("Failed to update primary Cart Profile. Please try again."),
             }
         );
     };
 
     return (
-        <AdminDashboard>
+        <DashboardLayout>
             <div className="flex items-center justify-between mb-6">
-                <h1 className="text-xl font-semibold"> Cart settings profile</h1>
+                <h1 className="text-xl font-semibold">Cart Settings Profile</h1>
+
                 <button
                     onClick={() => window.history.back()}
                     className="flex items-center text-sm text-gray-600 hover:underline"
@@ -36,7 +32,22 @@ export default function CartSettingList({ cartSettingList }) {
             </div>
 
             {cartSettingList.length === 0 ? (
-                <p>No cart settings profile found.</p>
+                <div className="flex flex-col items-center justify-center py-16 border rounded-lg bg-gray-50">
+                    <Settings className="w-14 h-14 text-gray-400 mb-3" />
+                    <h2 className="text-lg font-semibold text-gray-700">
+                        No Cart Settings Found
+                    </h2>
+                    <p className="text-gray-500 mt-1 mb-5 text-sm">
+                        Create a cart configuration to get started.
+                    </p>
+
+                    <Link
+                        href={route("cart.settings.create")}
+                        className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700"
+                    >
+                        Create Cart Setting
+                    </Link>
+                </div>
             ) : (
                 <div className="space-y-4 max-h-[80vh] overflow-auto">
                     {cartSettingList.map((setting, index) => (
@@ -48,22 +59,11 @@ export default function CartSettingList({ cartSettingList }) {
                                     : "bg-white"
                             }`}
                         >
-                            <p>
-                                <strong>Settings Name: </strong> {setting.name}
-                            </p>
-                            <p>
-                                <strong>Max item: </strong> {setting.max}
-                            </p>
-                            <p>
-                                <strong>Min item: </strong> {setting.min}
-                            </p>
-
-                            <p>
-                                <strong>Min Cost: </strong> {setting.min_cost}
-                            </p>
-                            <p>
-                                <strong>Max Cost: </strong> {setting.max_cost}
-                            </p>
+                            <p><strong>Settings Name: </strong> {setting.name}</p>
+                            <p><strong>Max item: </strong> {setting.max}</p>
+                            <p><strong>Min item: </strong> {setting.min}</p>
+                            <p><strong>Min Cost: </strong> ₦{setting.min_cost}</p>
+                            <p><strong>Max Cost: </strong> ₦{setting.max_cost}</p>
 
                             {setting.active ? (
                                 <span className="inline-flex items-center mt-2 text-green-600 font-medium text-sm">
@@ -81,6 +81,6 @@ export default function CartSettingList({ cartSettingList }) {
                     ))}
                 </div>
             )}
-        </AdminDashboard>
+        </DashboardLayout>
     );
 }

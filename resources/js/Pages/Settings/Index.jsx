@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 
 import DashboardLayout from "../DashboardLayout";
+import Breadcrumbs from "@/Components/Breadcrumb";
 
 const settingsList = [
 //   {
@@ -22,14 +23,14 @@ const settingsList = [
     title: "Bank Settings",
     description: "Set up or update your bank account information.",
     icon: <Banknote className="w-5 h-5 text-green-600" />,
-    link:"settings/bank",
+    link:"settings.bank.list",
   },
   {
     key: "cart",
     title: "Cart Settings",
     description: "Control how carts and saved items are managed.",
     icon: <ShoppingCart className="w-5 h-5 text-orange-500" />,
-    link:"settings/type?type=cart",
+    link:"settings.cart.list",
 
   },
   // {
@@ -48,9 +49,10 @@ const settingsList = [
   // },
 ];
 
-export default function Index() {
+export default function Index({ breadcrumbs }) {
   return (
     <DashboardLayout>
+      <Breadcrumbs breadcrumbs={breadcrumbs} />
       <div className="p-6">
         <h2 className="text-2xl font-semibold mb-4">Settings Overview</h2>
         <p className="mb-6 text-gray-600">
@@ -60,7 +62,7 @@ export default function Index() {
           {settingsList.map((setting) => (
             <Link
               key={setting.key}
-              href={setting.link}
+              href={route(setting.link)}
               className="block transition-all p-4 rounded-xl border 
                 hover:shadow-md hover:bg-gray-50 border-gray-200"
             >

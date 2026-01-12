@@ -12,7 +12,16 @@ class SettingsController extends Controller
     //
          public function index()
     {
-        return inertia("Settings/Index");
+        return inertia("Settings/Index",
+        [
+            //
+            "breadcrumbs"=>[
+                [
+                   "label"=>"Settings", "url"=>route("settings.index")
+                ]
+            ],
+        ]
+        );
     }
 
     public function typeIndex(Request $request)
