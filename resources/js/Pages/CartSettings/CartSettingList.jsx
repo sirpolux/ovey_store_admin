@@ -63,7 +63,7 @@ export default function CartSettingList({ cartSettingList, breadcrumbs }) {
                         {cartSettingList.map((setting, index) => (
                             <div
                                 key={index}
-                                className={`relative p-5 border rounded-xl shadow-sm transition-all hover:shadow-lg hover:-translate-y-[1px]
+                                className={`relative p-5 border rounded-xl shadow-sm transition-all hover:shadow-lg 
                                 ${setting.active ? "bg-emerald-50 border-emerald-500" : "bg-white"}`}
                             >
                                 <div className="flex justify-between items-start">

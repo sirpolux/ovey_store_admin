@@ -52,9 +52,11 @@ class SettingsController extends Controller
         [
             "cartSettingList"=>$cartListSettings,
             "breadcrumbs"=>[
-                [
-                   "label"=>"Cart Settings", "url"=>route("settings.cart.list")
-                ]
+                
+                    ["label"=>"Cart Settings", "url"=>null],
+                   ["label"=>"Cart Settings list", "url"=>route("settings.cart.list"),]
+
+                
             ],
         ]
         );
