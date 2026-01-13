@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("order_id");
             $table->string("user_id");
+            $table->foreignId('saving_id')->constrained()->onDelete('cascade');
             $table->string("transaction_type")->default("CREDIT");
             $table->string("recipient_account_id")->nullable();
             $table->string("sender_account_name");
