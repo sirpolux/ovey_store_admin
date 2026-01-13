@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('savings', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->foreignId('order_id')->constrained()->onDelete('cascade');
+            $table->string('saving_reference')->unique();
+            $table->integer('amount_saved')->default(0);
+            $table->integer('total')->default(0);
+            $table->integer('balance')->default(0);
+            $table->string('status')->default('active');
             $table->timestamps();
         });
     }
