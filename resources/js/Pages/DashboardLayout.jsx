@@ -59,12 +59,12 @@ export default function DashboardLayout({ children}) {
                     <div className="flex flex-col h-full p-4">
 
                         {/* Brand */}
-                        <div className="text-center mb-6">
-                            {/* <img
-                                src="/img/logo_small.jpg"
+                        <div className="text-center mb-6 mt-8">
+                            <img
+                                src="/img/ovey_savings_logo.jpeg"
                                 alt="Logo"
                                 className="mx-auto w-20 rounded-lg shadow"
-                            /> */}
+                            />
                             <h2 className="mt-3 font-bold text-lg tracking-wide">Ovey Store</h2>
                             <p className="text-xs text-gray-500">Admin Panel</p>
                         </div>
