@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CartResource extends JsonResource
+class ItemMinimalResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,13 +16,12 @@ class CartResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'item_count' => $this->item_count,
-            'total_cost' => $this->total_cost,
-            //'item=>'=>new ItemMinimalResource($this->cartItems->item),
-            'cart_items' => CartItemResource::collection($this->cartItems),
             'status' => $this->status,
-            'created_at' => $this->created_at,
+            'item_name' => $this->item_name,
+            'price' => $this->price,  
+            'uploads' => UploadResource::collection($this->uploads),
+            'quantity' => $this->quantity,
+       
         ];
     }
 }

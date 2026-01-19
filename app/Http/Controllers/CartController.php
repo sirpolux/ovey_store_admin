@@ -15,12 +15,13 @@ class CartController extends Controller
     public function index()
     {
         //
-            $query = Cart::query();
+        $query = Cart::query();
+          $query->with('cartItems:cart_id,item_id,quantity,total_cost,current_price,price_bought,id,created_at');
+       // $query->with('[cartItems:cart_id,item_id,quantity,total_cost,current_price,price_bought,id,created_at]');
         $cart_item = $query->where('status', 'OPEN')->orderBy('id', 'desc')->paginate(20)->onEachSide(1);
-        return inertia('Cart/Index',[
-            'cart'=>CartResource::collection($cart_item)
-        ] );
-
+        return inertia('Cart/Index', [
+            'cart' => CartResource::collection($cart_item)
+        ]);
     }
 
     /**

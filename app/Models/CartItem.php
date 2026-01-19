@@ -9,4 +9,15 @@ class CartItem extends Model
 {
     /** @use HasFactory<\Database\Factories\CartItemFactory> */
     use HasFactory;
+    
+    public function cart()
+    {
+        return $this->belongsTo(Cart::class);
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }   
+
 }
