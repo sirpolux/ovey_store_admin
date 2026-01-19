@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCartItemRequest;
 use App\Http\Requests\UpdateCartItemRequest;
+use App\Http\Resources\CartResource;
+use App\Models\Cart;
 use App\Models\CartItem;
 
 class CartItemController extends Controller
@@ -14,6 +16,12 @@ class CartItemController extends Controller
     public function index()
     {
         //
+        $query = Cart::query();
+        $cart_item = $query->where('status', 'OPEN')->orderBy('id', 'desc')->paginate(20)->onEachSide(1);
+        return inertia('Cart/Index',[
+            'cart'=>CartResource::collection($cart_item)
+        ] );
+
     }
 
     /**

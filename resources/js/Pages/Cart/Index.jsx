@@ -1,7 +1,14 @@
 import { Head, Link } from "@inertiajs/react";
 import { EyeIcon, ShoppingCartIcon, UserIcon } from "lucide-react";
-import Card from "@/Components/ui/Card";
-import CardContent from "@/Components/ui/CardContent";
+// import Card from "@/Components/ui/Card";
+// import CardContent from "@/Components/ui/CardContent";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/Components/ui/card";
 import DashboardLayout from "../DashboardLayout";
 
 export default function Index({ cart }) {
