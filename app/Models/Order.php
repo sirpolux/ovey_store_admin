@@ -19,4 +19,26 @@ class Order extends Model
         'billing_address',
         'placed_at',
     ];
+
+
+    public function customer()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function cart()
+    {
+        return $this->belongsTo(Cart::class);
+    }
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }   
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }
