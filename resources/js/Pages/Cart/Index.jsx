@@ -1,140 +1,151 @@
 import { Head, Link } from "@inertiajs/react";
 import { EyeIcon, ShoppingCartIcon, UserIcon } from "lucide-react";
-// import Card from "@/Components/ui/Card";
-// import CardContent from "@/Components/ui/CardContent";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardFooter,
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    CardFooter,
 } from "@/Components/ui/card";
 import DashboardLayout from "../DashboardLayout";
+import Breadcrumbs from "@/Components/Breadcrumb";
 
-export default function Index({ cart }) {
+export default function Index({ cart, breadcrumbs }) {
     return (
         <DashboardLayout>
             <Head title="Customer Carts" />
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
 
-            {/* Page Title */}
-            <h1 className="text-2xl font-bold flex items-center gap-2 mb-6">
-                <ShoppingCartIcon className="w-6 h-6" /> Customer Carts
-            </h1>
+            <div className="w-full min-h-screen  py-8 px-4 md:px-8">
+                {/* Back Button */}
+                <div className="">
+                    {/* Page Title */}
+                    <div className="mb-6">
+                        <h1 className="text-2xl font-bold flex items-center gap-2">
+                            <ShoppingCartIcon className="w-6 h-6 text-emerald-600" />
+                            Customer Carts
+                        </h1>
+                        <p className="text-sm text-gray-500 mt-1">
+                            View all active and historical customer carts
+                        </p>
+                    </div>
 
-            {/* If no carts found */}
-            {(!cart.data || cart.data.length === 0) && (
-                <div className="flex items-center justify-center py-20">
-                    <p className="text-gray-500 text-lg italic">
-                        No customer carts found.
-                    </p>
-                </div>
-            )}
+                    {/* Empty state */}
+                    {(!cart.data || cart.data.length === 0) && (
+                        <div className="flex items-center justify-center py-20">
+                            <p className="text-gray-500 text-lg italic">
+                                No customer carts found.
+                            </p>
+                        </div>
+                    )}
 
-            {/* Cart list */}
-            <div className="grid gap-6 overflow-auto max-h-[75vh]">
-                {cart.data?.map((entry) => (
-                    <Card
-                        key={entry.cart_id}
-                        className="shadow-lg hover:shadow-xl transition-shadow duration-300"
-                    >
-                        <CardContent className="p-4">
-                            {/* Header */}
-                            <div className="flex items-center justify-between border-b pb-3 mb-3">
-                                <div className="text-lg font-semibold flex items-center gap-2">
-                                    <UserIcon className="w-5 h-5 text-gray-500" />
-                                    {entry.user.name}{" "}
-                                    <span className="text-sm text-gray-500">
-                                        ({entry.user.email})
-                                    </span>
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                    Cart ID:{" "}
-                                    <span className="font-medium">
-                                        #{entry.cart_id}
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Cart items */}
-                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                                {entry.cart_item.map((ci, index) => (
-                                    <div
-                                        key={index}
-                                        className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow"
-                                    >
-                                        <img
-                                            src={ci.item.image_url}
-                                            alt={ci.item.title}
-                                            className="h-40 w-full object-cover"
-                                        />
-                                        <div className="p-3">
-                                            <h2 className="font-semibold text-base truncate">
-                                                {ci.item.title}
-                                            </h2>
-                                            <p className="text-sm text-gray-600">
-                                                {ci.item.author}
-                                            </p>
-                                            <p className="text-sm text-gray-500">
-                                                ₦{ci.item.price.toLocaleString()}
-                                            </p>
-                                            <p className="text-xs text-muted-foreground mt-1">
-                                                Format: {ci.item.format}
-                                            </p>
-                                            <div className="flex justify-between items-center mt-2">
-                                                <span className="text-xs text-gray-400">
-                                                    Qty: {ci.quantity} | Total: ₦
-                                                    {ci.total_cost.toLocaleString()}
-                                                </span>
-                                                <Link
-                                                    href={route("cart.show", entry.cart_id)}
-                                                    className="inline-flex items-center rounded-md bg-gray-800 px-3 py-1 text-xs font-semibold text-white hover:bg-gray-700 focus:ring-2 focus:ring-indigo-500 transition"
-                                                >
-                                                    <EyeIcon className="w-4 h-4 mr-1" /> View
-                                                </Link>
-                                            </div>
-                                        </div>
+                    {/* Cart list */}
+                    <div className="grid gap-6 max-h-[75vh] overflow-auto pr-1">
+                        {cart.data?.map((entry) => (
+                            <Card
+                                key={entry.id}
+                                className="shadow-md hover:shadow-lg transition"
+                            >
+                                {/* Header */}
+                                <CardHeader className="flex flex-row items-center justify-between pb-3">
+                                    <div className="flex items-center gap-2">
+                                        <UserIcon className="w-5 h-5 text-gray-500" />
+                                        <CardTitle className="text-base">
+                                            Customer name: {entry.user.name}
+                                        </CardTitle>
                                     </div>
-                                ))}
-                            </div>
 
-                            {/* Footer */}
-                            <div className="mt-4 flex justify-between items-center border-t pt-3 text-sm">
-                                <div>
-                                    Created:{" "}
-                                    <span className="text-gray-500">
-                                        {entry.user.created_at}
+                                    <span className="text-xs px-3 py-1 rounded-full bg-blue-100 text-blue-600">
+                                        {entry.status}
                                     </span>
-                                </div>
-                                <div className="font-medium text-right">
-                                    Total Cost: ₦
-                                    {parseFloat(entry.total_cost).toLocaleString(undefined, {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2,
-                                    })}
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
+                                </CardHeader>
+
+                                <CardContent>
+                                    {/* Cart items */}
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                                        {entry.cart_items.map((ci) => {
+                                            const item = ci.item;
+                                            const image =
+                                                item?.uploads?.[0]?.file_path ??
+                                                "https://via.placeholder.com/300";
+
+                                            return (
+                                                <div
+                                                    key={ci.id}
+                                                    className="border rounded-lg overflow-hidden hover:shadow transition"
+                                                >
+                                                    <img
+                                                        src={image}
+                                                        alt={item.item_name}
+                                                        className="h-32 w-full object-cover"
+                                                    />
+
+                                                    <div className="p-3">
+                                                        <h3 className="font-medium text-sm truncate">
+                                                            {item.item_name}
+                                                        </h3>
+
+                                                        <p className="text-xs text-gray-500 mt-1">
+                                                            Price: ₦{Number(item.price).toLocaleString()}
+                                                        </p>
+
+                                                        <p className="text-xs text-gray-400 mt-1">
+                                                            Stock: {item.quantity}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </CardContent>
+
+                                {/* Footer */}
+                                <CardFooter className="flex justify-between items-center border-t pt-3 text-sm">
+                                    <div className="text-gray-500">
+                                        Created:{" "}
+                                        <span className="font-medium">
+                                            {new Date(entry.created_at).toLocaleString()}
+                                        </span>
+                                    </div>
+
+                                    <div className="flex items-center gap-4">
+                                        <span className="font-semibold">
+                                            Total: ₦
+                                            {Number(entry.total_cost).toLocaleString()}
+                                        </span>
+
+                                        <Link
+                                            href={route("cart.show", entry.id)}
+                                            className="inline-flex items-center gap-1 rounded-md bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-gray-800 transition"
+                                        >
+                                            <EyeIcon className="w-4 h-4" />
+                                            View
+                                        </Link>
+                                    </div>
+                                </CardFooter>
+                            </Card>
+                        ))}
+                    </div>
+
+                    {/* Pagination */}
+                    {cart.meta?.links && (
+                        <div className="flex justify-center mt-6 gap-2 flex-wrap">
+                            {cart.meta.links.map((link, index) => (
+                                <Link
+                                    key={index}
+                                    href={link.url ?? "#"}
+                                    className={`px-3 py-1 text-sm rounded-md border transition ${link.active
+                                            ? "bg-gray-900 text-white"
+                                            : "bg-white text-gray-700 hover:bg-gray-100"
+                                        } ${!link.url ? "opacity-50 cursor-not-allowed" : ""}`}
+                                    dangerouslySetInnerHTML={{ __html: link.label }}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
 
-            {/* Pagination */}
-            {cart.meta?.links && (
-                <div className="flex justify-center mt-6 gap-2 flex-wrap">
-                    {cart.meta.links.map((link, index) => (
-                        <Link
-                            key={index}
-                            href={link.url ?? "#"}
-                            className={`px-3 py-1 text-sm rounded-md border ${
-                                link.active
-                                    ? "bg-gray-800 text-white"
-                                    : "bg-white text-gray-700 hover:bg-gray-100"
-                            } ${!link.url ? "opacity-50 cursor-not-allowed" : ""}`}
-                            dangerouslySetInnerHTML={{ __html: link.label }}
-                        />
-                    ))}
-                </div>
-            )}
         </DashboardLayout>
     );
 }

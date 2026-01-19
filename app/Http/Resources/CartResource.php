@@ -16,7 +16,7 @@ class CartResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            'user' => new UserResource($this->user), 
             'item_count' => $this->item_count,
             'total_cost' => $this->total_cost,
             //'item=>'=>new ItemMinimalResource($this->cartItems->item),

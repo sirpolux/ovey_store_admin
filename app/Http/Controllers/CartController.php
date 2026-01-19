@@ -20,7 +20,10 @@ class CartController extends Controller
        // $query->with('[cartItems:cart_id,item_id,quantity,total_cost,current_price,price_bought,id,created_at]');
         $cart_item = $query->where('status', 'OPEN')->orderBy('id', 'desc')->paginate(20)->onEachSide(1);
         return inertia('Cart/Index', [
-            'cart' => CartResource::collection($cart_item)
+            'cart' => CartResource::collection($cart_item),
+            'breadcrumbs' => [
+                ['label' => 'Cart', 'url' => route('cart.index')]
+            ]
         ]);
     }
 
@@ -38,6 +41,7 @@ class CartController extends Controller
     public function store(StoreCartRequest $request)
     {
         //
+        
     }
 
     /**
@@ -46,6 +50,14 @@ class CartController extends Controller
     public function show(Cart $cart)
     {
         //
+        $cart->load(['cartItems:cart_id,item_id,quantity,total_cost,current_price,price_bought,id,created_at']);
+        return inertia('Cart/Show', [
+            'cart' => new CartResource($cart),
+            'breadcrumbs' => [
+                ['label' => 'Cart', 'url' => route('cart.index')],
+                ['label' =>"Cart Id:". $cart->id, 'url' => route('cart.show', $cart->id)]
+            ]
+        ]);
     }
 
     /**
