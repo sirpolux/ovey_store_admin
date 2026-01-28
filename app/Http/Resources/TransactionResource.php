@@ -18,7 +18,8 @@ class TransactionResource extends JsonResource
             'id'=>$this->id,
             'transaction_type'=>$this->transaction_type,
             'user'=>new UserResource($this->user) ,
-            'order'=> new OrderResource($this->order),
+            'order'=> new OrderMinimalResource($this->order),
+            'account'=>new AccountResource($this->account),
             'amount'=>$this->amount,
             'evidence_of_payment'=>$this->evidence_of_payment,
             'sender_bank'=>$this->sender_bank,
@@ -26,7 +27,7 @@ class TransactionResource extends JsonResource
             'sender_account_name'=>$this->sender_account_name,
             'transaction_status'=>$this->transaction_status,
             'transaction_channel'=>$this->transaction_channel,
-            'payment_comfirmed_by'=>$this->paymentConfirmedBy
+            'payment_comfirmed_by'=>new UserResource($this->paymentConfirmedBy)
         ];
     }
 }

@@ -19,7 +19,7 @@ class Transaction extends Model
     }
 
     public function account(){
-        return $this->hasOne(Account::class, 'recipient_account_id', 'id');
+        return $this->belongsTo(Account::class, 'recipient_account_id', 'id');
     }
 
     public function paymentConfirmedBy(){

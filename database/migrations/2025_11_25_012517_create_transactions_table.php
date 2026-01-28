@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string("amount");
             $table->string("transaction_status")->default("PENDING");
             $table->string("transaction_channel")->default("BANK TRANSFER");
-            $table->string("payment_confirmed_by")->nullable();
+            $table->foreignId("payment_confirmed_by")->nullable();
             $table->timestamps();
         });
     }

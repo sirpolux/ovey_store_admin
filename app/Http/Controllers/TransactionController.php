@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Constants\Constant;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
+use App\Http\Resources\CartResource;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 
@@ -55,6 +56,20 @@ class TransactionController extends Controller
     public function show(Transaction $transaction)
     {
         //
+        return inertia('Transaction/Show', [
+            'transaction' => new TransactionResource($transaction),
+            'cart'=>new CartResource($transaction->order->cart),
+            'breadcrumbs' => [
+                [
+                    'label' => 'Transactions',
+                    'url' => route('transactions.index')
+                ],
+                [
+                    'label' => $transaction->id,
+                    'url' => route('transactions.show', $transaction->id)
+                ]
+            ]
+        ]);
     }
 
     /**

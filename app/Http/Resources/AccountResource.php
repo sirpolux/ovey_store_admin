@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CartItemResource extends JsonResource
+class AccountResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,10 +14,10 @@ class CartItemResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-       return [
-           'id' => $this->id,
-           'item' => new ItemMinimalResource($this->item),  
-           'quantity' => $this->quantity,
-       ];
+        return [
+            'account_number'=>$this->account_number,
+            'account_name'=>$this->account_name,
+            'bank_name'=>$this->bank_name
+        ];
     }
 }

@@ -1,27 +1,36 @@
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import AdminDashboard from "../AdminDashboard";
 import { motion } from "framer-motion";
-import { FaMoneyBill, FaCheck, FaTimes, FaArrowAltCircleLeft } from "react-icons/fa";
-import { useState } from "react";
+import {
+    FaCheck,
+    FaTimes,
+    FaArrowLeft,
+    FaExternalLinkAlt,
+} from "react-icons/fa";
 import toast from "react-hot-toast";
-export default function Show() {
-    const { transaction } = usePage().props;
-    const txn = transaction.data;
-    const customer  = transaction.data.customer;
+import DashboardLayout from "../DashboardLayout";
+import Breadcrumbs from "@/Components/Breadcrumb";
 
-    const [modal, setModal] = useState(null);
+export default function Show() {
+    const { transaction, cart, breadcrumbs } = usePage().props;
+
+    const txn = transaction.data;
+    const order = txn.order;
+    const account = txn.account;
+    const cartData = cart?.data;
 
     const form = useForm({
-        id: txn.id,
-        comment: "",
+        status: "",
     });
-    const handleSubmit = () => {
-        form.post(route("confirm.transaction"), {
+
+    const updateStatus = (status) => {
+        form.post(route("transactions.status.update", txn.id), {
+            data: { status },
             preserveScroll: true,
             onSuccess: () => {
-                toast.success("Action completed successfully");
-                setModal(null);
-                form.reset();
+                toast.success(`Transaction ${status.toLowerCase()}ed successfully`);
+            },
+            onError: () => {
+                toast.error("Something went wrong");
             },
         });
     };
@@ -29,218 +38,157 @@ export default function Show() {
     const statusColors = {
         PENDING: "bg-yellow-100 text-yellow-800",
         APPROVED: "bg-green-100 text-green-800",
+        DECLINED: "bg-red-100 text-red-800",
         PAID: "bg-blue-100 text-blue-800",
-        COMPLETED: "bg-gray-100 text-gray-800",
     };
 
-    return (
-        <AdminDashboard>
-            <Head title={`Transaction #${txn.order_id ?? txn.id}`} />
+    const canTakeAction = txn.transaction_status === "PENDING";
 
-            <div className="max-w-4xl mx-auto p-6 space-y-6">
-                {/* Back Button */}
+    return (
+        <DashboardLayout>
+            <Head title={`Transaction #${txn.id}`} />
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+
+            <div className="max-w-6xl mx-auto p-6 space-y-6">
+
+                {/* Back */}
                 <Link
                     href={route("transactions.index")}
-                    className="inline-flex items-center px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium transition"
+                    className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-black"
                 >
-                    ← Back to Transactions
+                    <FaArrowLeft />
+                    Back to Transactions
                 </Link>
 
                 {/* Header */}
                 <motion.div
-                    initial={{ opacity: 0, y: -20 }}
+                    initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center"
+                    className="flex justify-between items-start"
                 >
-                    <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-                        Transaction Details
-                    </h1>
-                    <p className="text-gray-600 mt-2">
-                        Review full details of this transaction
-                    </p>
+                    <div>
+                        <h1 className="text-2xl font-semibold">
+                            Transaction #{txn.id}
+                        </h1>
+                        <p className="text-gray-500 text-sm">
+                            Submitted by {txn.user?.name} ({txn.user?.email})
+                        </p>
+                    </div>
+
+                    <span
+                        className={`px-3 py-1 rounded text-sm font-semibold ${
+                            statusColors[txn.transaction_status]
+                        }`}
+                    >
+                        {txn.transaction_status}
+                    </span>
                 </motion.div>
 
-                {/* Transaction Card */}
-                <div className="bg-white shadow-lg rounded-2xl p-6 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <h3 className="text-gray-500 text-sm">Purpose</h3>
-                            <p className="font-medium">{txn.purpose}</p>
+                {/* Transaction Details */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    {/* Payment Info */}
+                    <div className="bg-white rounded-lg shadow p-5 space-y-3">
+                        <h3 className="font-semibold">Payment Details</h3>
+
+                        <div className="text-sm">
+                            <div><strong>Amount:</strong> ₦{Number(txn.amount).toLocaleString()}</div>
+                            <div><strong>Channel:</strong> {txn.transaction_channel}</div>
+                            <div><strong>Sender Bank:</strong> {txn.sender_bank}</div>
+                            <div><strong>Account Name:</strong> {txn.sender_account_name}</div>
+                            <div><strong>Account Number:</strong> {txn.sender_account_number}</div>
                         </div>
 
-                        <div>
-                            <h3 className="text-gray-500 text-sm">Amount</h3>
-                            <p className="font-medium">
-                                ₦{parseInt(txn.amount).toLocaleString()}
-                            </p>
-                        </div>
-
-                        <div>
-                            <h3 className="text-gray-500 text-sm">Status</h3>
-                            <span
-                                className={`px-2 py-1 rounded text-xs font-semibold ${statusColors[txn.transaction_status] ||
-                                    "bg-gray-100 text-gray-800"
-                                    }`}
+                        {txn.evidence_of_payment && (
+                            <a
+                                href={txn.evidence_of_payment}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 text-indigo-600 text-sm hover:underline"
                             >
-                                {txn.transaction_status}
-                            </span>
-                        </div>
-
-                        <div>
-                            <h3 className="text-gray-500 text-sm">Channel</h3>
-                            <p className="capitalize">{txn.transaction_channel}</p>
-                        </div>
-
-                        <div>
-                            <h3 className="text-gray-500 text-sm">Sender</h3>
-                            <p className="font-medium">
-                                {txn.sender_account_name} <br />
-                                <span className="text-gray-600 text-sm">
-                                    {txn.sender_bank} • {txn.sender_account_number}
-                                </span>
-                            </p>
-                        </div>
-
-                        {txn.recipient_account && (
-                            <div>
-                                <h3 className="text-gray-500 text-sm">Recipient</h3>
-                                <p className="font-medium">
-                                    {txn.recipient_account.account_name} <br />
-                                    <span className="text-gray-600 text-sm">
-                                        {txn.recipient_account.bank_name} •{" "}
-                                        {txn.recipient_account.account_number}
-                                    </span>
-                                </p>
-                            </div>
+                                <FaExternalLinkAlt />
+                                View Payment Evidence
+                            </a>
                         )}
                     </div>
 
-                    <hr/>
-                    {/* customer section */}
-                    <div className="">
+                    {/* Order Info */}
+                    {order && (
+                        <div className="bg-white rounded-lg shadow p-5 space-y-3">
+                            <h3 className="font-semibold">Order Summary</h3>
 
-                   
-                    <h1 className="text-lg font-semibold ">Client data</h1>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <h3 className="text-gray-500 text-sm">Name</h3>
-                            <p className="text-sm">{customer.name}</p>
+                            <div className="text-sm">
+                                <div><strong>Order ID:</strong> #{order.id}</div>
+                                <div><strong>Status:</strong> {order.status}</div>
+                                <div><strong>Total Cost:</strong> ₦{Number(order.total_cost).toLocaleString()}</div>
+                                <div><strong>Created:</strong> {new Date(order.created_at).toLocaleDateString()}</div>
+                            </div>
                         </div>
-
-                        <div>
-                            <h3 className="text-gray-500 text-sm">email</h3>
-                            <p className="font-medium">
-                                {customer.email}
-                            </p>
-                        </div>
-
-                        <div>
-                            <h3 className="text-gray-500 text-sm">Phone number</h3>
-                            <p className="capitalize">{customer.contact_number}</p>
-                        </div>
-                    </div>
-                    </div>
-                    <hr/>
-                    {/* end of customer section */}
-
-                    <div className="font-semibold">
-                        {txn.order_id && <span>Order Id: ORD-0{txn.order_id}</span>}
-                        {txn.event_id && <span>Retreat Id: RET-0{txn.event_id}</span>}
-                    </div>
-
-
-                    {/* Proof of Payment */}
-                    <div>
-                        <h3 className="text-gray-500 text-sm mb-2">Proof of Payment</h3>
-                        <a
-                            href={
-                                txn.evidence_of_payment
-                            }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <img
-                                src={
-                                    txn.evidence_of_payment
-                                }
-                                alt="Proof of Payment"
-                                className="max-h-64 rounded-lg border"
-                            />
-                        </a>
-                    </div>
-
-                    {/* Confirmed By */}
-                    {txn.payment_confirmed_by && (
-                        <div>
-                            <h3 className="text-gray-500 text-sm mb-1">Confirmed By</h3>
-                            <p className="font-medium">
-                                {txn.payment_confirmed_by.name} <br />
-                                <span className="text-gray-600 text-sm">
-                                    {txn.payment_confirmed_by.email}
-                                </span>
-                            </p>
+                    )}
+                </div>
+                    {account && (
+                        <div className="bg-white rounded-lg shadow p-5 text-sm">
+                            <h3 className="font-semibold mb-3 text-base">Recipient Account</h3>
+                            <div><strong>Bank:</strong> {account.bank_name}</div>
+                            <div><strong>Account Name:</strong> {account.account_name}</div>
+                            <div><strong>Account Number:</strong> {account.account_number}</div>
+                            
                         </div>
                     )}
 
-                    {/* Dates */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <h3 className="text-gray-500 text-sm">Created At</h3>
-                            <p>{new Date(txn.created_at).toLocaleString()}</p>
-                        </div>
-                        <div>
-                            <h3 className="text-gray-500 text-sm">Updated At</h3>
-                            <p>{new Date(txn.updated_at).toLocaleString()}</p>
+
+                {/* Cart Items */}
+                {cartData && (
+                    <div className="bg-white rounded-lg shadow p-5">
+                        <h3 className="font-semibold mb-3">Purchased Items</h3>
+
+                        <div className="divide-y">
+                            <div
+                                  
+                                    className="flex justify-between py-2 text-sm"
+                                >
+                                    <span className="font-semibold">Item</span>
+                                    <span className="font-semibold">Quantity</span>
+                                    <span className="font-semibold">Unit Price</span>
+                                    </div>
+                            {cartData.cart_items.map(ci => (
+                                <div
+                                    key={ci.id}
+                                    className="flex justify-between py-2 text-sm"
+                                >
+                                    <span>{ci.item.item_name}</span>
+                                     <span>{ci.quantity}</span>
+                                    <span>₦{Number(ci.item.price).toLocaleString()}</span>
+                                </div>
+                            ))}
                         </div>
                     </div>
+                )}
 
-                    {txn.transaction_status === "PENDING" &&
+                {/* Actions */}
+                {canTakeAction && (
+                    <div className="flex gap-3 justify-end">
                         <button
-                            onClick={() => {
-                                form.setData({ ...form.data, action: "confirm_payment" });
-                                setModal("confirm");
-                            }}
-                            className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                            onClick={() => updateStatus("DECLINED")}
+                            disabled={form.processing}
+                            className="inline-flex items-center gap-2 px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-50"
                         >
-                            <FaCheck /> Confirm Payment
+                            <FaTimes />
+                            Decline Payment
                         </button>
-                    }
-                </div>
-            </div>
-                  {/* Modal */}
-      {modal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
-          <div className="bg-white rounded-lg shadow-lg p-6 min-w-[40%]">
-            <h2 className="text-lg font-bold mb-4">
-              Confirm Payment
-            </h2>
-            <textarea
-              placeholder="Comment"
-              className="w-full border p-2 mb-4 rounded"
-              value={form.data.comment}
-              onChange={(e) => form.setData("comment", e.target.value)}
-            />
 
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setModal(null)}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSubmit}
-                disabled={form.processing}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
-              >
-                {form.processing ? "Processing..." : "Submit"}
-              </button>
-            </div>
-          </div>
-        </div>
-    )}
+                        <button
+                            onClick={() => updateStatus("APPROVED")}
+                            disabled={form.processing}
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                        >
+                            <FaCheck />
+                            Confirm Payment
+                        </button>
+                    </div>
+                )}
 
-        </AdminDashboard>
+            </div>
+        </DashboardLayout>
     );
 }
