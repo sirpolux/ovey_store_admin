@@ -19,12 +19,20 @@ export default function Show() {
     const cartData = cart?.data;
 
     const form = useForm({
-        status: "",
+        transaction_id: txn.id,
     });
 
+
+
+
     const updateStatus = (status) => {
+        if(confirm(`Are you sure you want to ${status.toLowerCase()} this transaction?`) === false) return;
+        form
+            .transform((data) => ({
+                ...data,
+                status: status,
+            }))
         form.post(route("transactions.status.update", txn.id), {
-            data: { status },
             preserveScroll: true,
             onSuccess: () => {
                 toast.success(`Transaction ${status.toLowerCase()}ed successfully`);
@@ -34,6 +42,28 @@ export default function Show() {
             },
         });
     };
+
+
+
+
+    // const form = useForm({
+    //     status: "",
+    //     transaction_id: txn.id,
+    // });
+
+    // const updateStatus = (status) => {
+    //     form.setData("status", status);
+    //     form.post(route("transactions.status.update", txn.id), {
+    //         // data: { status },
+    //         preserveScroll: true,
+    //         onSuccess: () => {
+    //             toast.success(`Transaction ${status.toLowerCase()}ed successfully`);
+    //         },
+    //         onError: () => {
+    //             toast.error("Something went wrong");
+    //         },
+    //     });
+    // };
 
     const statusColors = {
         PENDING: "bg-yellow-100 text-yellow-800",
@@ -76,9 +106,8 @@ export default function Show() {
                     </div>
 
                     <span
-                        className={`px-3 py-1 rounded text-sm font-semibold ${
-                            statusColors[txn.transaction_status]
-                        }`}
+                        className={`px-3 py-1 rounded text-sm font-semibold ${statusColors[txn.transaction_status]
+                            }`}
                     >
                         {txn.transaction_status}
                     </span>
@@ -126,15 +155,15 @@ export default function Show() {
                         </div>
                     )}
                 </div>
-                    {account && (
-                        <div className="bg-white rounded-lg shadow p-5 text-sm">
-                            <h3 className="font-semibold mb-3 text-base">Recipient Account</h3>
-                            <div><strong>Bank:</strong> {account.bank_name}</div>
-                            <div><strong>Account Name:</strong> {account.account_name}</div>
-                            <div><strong>Account Number:</strong> {account.account_number}</div>
-                            
-                        </div>
-                    )}
+                {account && (
+                    <div className="bg-white rounded-lg shadow p-5 text-sm">
+                        <h3 className="font-semibold mb-3 text-base">Recipient Account</h3>
+                        <div><strong>Bank:</strong> {account.bank_name}</div>
+                        <div><strong>Account Name:</strong> {account.account_name}</div>
+                        <div><strong>Account Number:</strong> {account.account_number}</div>
+
+                    </div>
+                )}
 
 
                 {/* Cart Items */}
@@ -144,20 +173,20 @@ export default function Show() {
 
                         <div className="divide-y">
                             <div
-                                  
-                                    className="flex justify-between py-2 text-sm"
-                                >
-                                    <span className="font-semibold">Item</span>
-                                    <span className="font-semibold">Quantity</span>
-                                    <span className="font-semibold">Unit Price</span>
-                                    </div>
+
+                                className="flex justify-between py-2 text-sm"
+                            >
+                                <span className="font-semibold">Item</span>
+                                <span className="font-semibold">Quantity</span>
+                                <span className="font-semibold">Unit Price</span>
+                            </div>
                             {cartData.cart_items.map(ci => (
                                 <div
                                     key={ci.id}
                                     className="flex justify-between py-2 text-sm"
                                 >
                                     <span>{ci.item.item_name}</span>
-                                     <span>{ci.quantity}</span>
+                                    <span>{ci.quantity}</span>
                                     <span>₦{Number(ci.item.price).toLocaleString()}</span>
                                 </div>
                             ))}

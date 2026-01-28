@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateTransactionRequest;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
+use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
@@ -72,6 +73,12 @@ class TransactionController extends Controller
         ]);
     }
 
+
+    public function updateTransactionStatus(Request $request, Transaction $transaction){
+      dd($request->all());
+    // dd($transaction);
+    
+    }
     /**
      * Show the form for editing the specified resource.
      */

@@ -58,7 +58,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('stock', StockController::class);
     Route::resource('cart', CartController::class);
     Route::resource('order', OrderController::class);
+    
     Route::resource('transactions', TransactionController::class);
+    Route::post('/transactions/status/update/{transaction}', [TransactionController::class, 'updateTransactionStatus'])->name('transactions.status.update');
     Route::resource('log', LogController::class);
     Route::resource('settings', SettingsController::class);
     Route::get('item/image/add/{id}', [ItemController::class, 'addImage'])->name('item.image.add');
