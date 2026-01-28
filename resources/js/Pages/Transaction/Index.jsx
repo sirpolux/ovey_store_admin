@@ -1,6 +1,7 @@
 import { Head, Link, usePage } from "@inertiajs/react";
-import AdminDashboard from "../AdminDashboard";
+
 import { motion } from "framer-motion";
+import DashboardLayout from "../DashboardLayout";
 
 export default function Index() {
     const { transactions } = usePage().props;
@@ -13,7 +14,7 @@ export default function Index() {
     };
 
     return (
-        <AdminDashboard>
+        <DashboardLayout>
             <Head title="Transactions" />
 
             <div className="max-w-7xl mx-auto p-6 space-y-8">
@@ -28,8 +29,7 @@ export default function Index() {
                         Transactions
                     </h1>
                     <p className="text-gray-600 max-w-2xl mx-auto">
-                        Manage and review all transactions made by users, 
-                        including book purchases and retreat bookings.
+                        Manage and review all transactions.
                     </p>
                 </motion.div>
 
@@ -122,6 +122,6 @@ export default function Index() {
                     ))}
                 </div>
             </div>
-        </AdminDashboard>
+        </DashboardLayout>
     );
 }

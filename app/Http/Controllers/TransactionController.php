@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\Constant;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
+use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 
 class TransactionController extends Controller
@@ -14,6 +16,21 @@ class TransactionController extends Controller
     public function index()
     {
         //
+
+        $query = Transaction::query();
+        if (request()->has('status')) {
+            if (in_array(request('status'), Constant::TRANSCATION_STATUS)) {
+                $transactions = $query->where('status', request('status'))->paginate(20)->onEachSide(1);
+                return inertia('Transaction/Index', [
+                    'transactions' => TransactionResource::collection($transactions)
+                ]);
+            }
+        }
+
+        $transactions = $query->paginate(20)->onEachSide(1);
+        return inertia('Transaction/Index', [
+            'transactions' => TransactionResource::collection($transactions)
+        ]);
     }
 
     /**
