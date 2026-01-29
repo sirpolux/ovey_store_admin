@@ -20,7 +20,7 @@ export default function Show({ breadcrumbs }) {
                 transaction_id: transactionId,
                 action,
             }))
-            transactionForm.post(route("savings.transaction.update"), {
+            transactionForm.post(route("savings.transaction.update", transactionId), {
                 preserveScroll: true,
             });
     };
@@ -59,28 +59,28 @@ export default function Show({ breadcrumbs }) {
                 <div className="bg-white rounded-xl shadow p-6 grid md:grid-cols-4 gap-6">
                     <div>
                         <p className="text-xs text-gray-500">Saving Reference</p>
-                        <p className="font-mono font-semibold">{data.saving_reference}</p>
+                        <p className="font-mono text-xs font-semibold overflow-hidden">{data.saving_reference}</p>
                     </div>
 
                     <div>
                         <p className="text-xs text-gray-500">Customer</p>
-                        <p className="font-medium">{data.user.name}</p>
+                        <p className="font-medium text-sm">{data.user.name}</p>
                         <p className="text-xs text-gray-500">{data.user.email}</p>
                     </div>
 
                     <div>
                         <p className="text-xs text-gray-500">Target</p>
-                        <p className="font-semibold text-lg">
+                        <p className="font-semibold text-sm">
                             ₦{Number(data.total).toLocaleString()}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 ">
                             Saved: ₦{Number(data.amount_saved).toLocaleString()}
                         </p>
                     </div>
 
                     <div>
                         <p className="text-xs text-gray-500">Balance</p>
-                        <p className="font-semibold text-lg">
+                        <p className="font-semibold text-sm">
                             ₦{Number(data.balance).toLocaleString()}
                         </p>
 

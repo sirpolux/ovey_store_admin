@@ -174,10 +174,11 @@ class SavingController extends Controller
 
     public function updateTransactionStatus(Request $request, Transaction $transaction)
     {
-        dd($transaction);
-        $transaction = Transaction::find($request->transaction_id);
+        // dd($transaction);
+        $savings = $transaction->savings;
+        dd($savings);
         $transaction->status = $request->status;
         $transaction->save();
         return response()->json(['success' => true]);
-    }   
+    }
 }
