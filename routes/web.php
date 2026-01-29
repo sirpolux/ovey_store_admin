@@ -8,6 +8,7 @@ use App\Http\Controllers\ItemImageController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SavingController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StockController;
@@ -58,7 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('stock', StockController::class);
     Route::resource('cart', CartController::class);
     Route::resource('order', OrderController::class);
-    
+    Route::resource('savings', SavingController::class);
     Route::resource('transactions', TransactionController::class);
     Route::post('/transactions/status/update/{transaction}', [TransactionController::class, 'updateTransactionStatus'])->name('transactions.status.update');
     Route::resource('log', LogController::class);
@@ -90,6 +91,10 @@ Route::middleware('auth')->group(function () {
         Route::post("/bank/setup/primary", [AccountController::class, 'setPrimaryBank'])->name("bank.setup.primary");
         Route::resource('bank', AccountController::class);
     });
+
+ //   Route::get('/savings', [SavingController::class, 'index'])->name('savings.index');
+Route::get('/savings/export', [SavingController::class, 'export'])->name('savings.export');
+
 
     // routes/web.php
 

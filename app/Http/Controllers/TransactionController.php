@@ -9,6 +9,7 @@ use App\Http\Resources\CartResource;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
@@ -59,7 +60,7 @@ class TransactionController extends Controller
         //
         return inertia('Transaction/Show', [
             'transaction' => new TransactionResource($transaction),
-            'cart'=>new CartResource($transaction->order->cart),
+            'cart' => new CartResource($transaction->order->cart),
             'breadcrumbs' => [
                 [
                     'label' => 'Transactions',
@@ -74,10 +75,17 @@ class TransactionController extends Controller
     }
 
 
-    public function updateTransactionStatus(Request $request, Transaction $transaction){
-      dd($request->all());
-    // dd($transaction);
-    
+    public function updateTransactionStatus(Request $request, Transaction $transaction)
+    {
+
+        $user = Auth::user();
+        $request->validate([
+            'status' => ['required', 'in:APPROVED,DECLINED']
+        ]);
+        $transaction->transaction_status = $request->status;
+        $transaction->payment_confirmed_by = $user->id;
+        $transaction->save();
+        return redirect()->route('transactions.show', $transaction->id);
     }
     /**
      * Show the form for editing the specified resource.
