@@ -25,4 +25,10 @@ class Transaction extends Model
     public function paymentConfirmedBy(){
         return $this->belongsTo(User::class, 'payent_confirmed_by');
     }
+
+    public function savings(){
+        return $this->belongsTo(Saving::class, 'saving_id', 'id');
+    }
+
+
 }

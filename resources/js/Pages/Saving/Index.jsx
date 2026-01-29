@@ -1,12 +1,13 @@
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import DashboardLayout from "../DashboardLayout";
 import Breadcrumbs from "@/Components/Breadcrumb";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-import { useState } from "react";
+import html2pdf from "html2pdf.js";
+import { useRef, useState } from "react";
+import { Eye } from "lucide-react";
 
 export default function Index({ breadcrumbs }) {
     const { savings, filters = {} } = usePage().props;
+    const pdfRef = useRef(null);
 
     const [keyword, setKeyword] = useState(filters.keyword || "");
     const [startDate, setStartDate] = useState(filters.start_date || "");
@@ -15,7 +16,7 @@ export default function Index({ breadcrumbs }) {
     const [sortDirection, setSortDirection] = useState(filters.sort_direction || "desc");
 
     /* -----------------------------
-     * Filters (Inertia-driven)
+     * Filters
      * ----------------------------- */
     const applyFilters = () => {
         router.get(
@@ -27,54 +28,30 @@ export default function Index({ breadcrumbs }) {
                 sort_field: sortField,
                 sort_direction: sortDirection,
             },
-            {
-                preserveState: true,
-                replace: true,
-            }
+            { preserveState: true, replace: true }
         );
     };
 
     /* -----------------------------
-     * PDF Export (current page only)
+     * PDF Export (Landscape)
      * ----------------------------- */
     const exportPdf = () => {
-        const doc = new jsPDF();
+        if (!pdfRef.current) return;
 
-        doc.setFontSize(14);
-        doc.text("Savings Report", 14, 15);
-
-        doc.setFontSize(10);
-        doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 22);
-
-        autoTable(doc, {
-            startY: 30,
-            head: [[
-                "#",
-                "Saving Ref",
-                "User",
-                "Email",
-                "Amount Saved",
-                "Total",
-                "Balance",
-                "Status",
-                "Created",
-            ]],
-            body: savings.data.map((s, index) => ([
-                index + 1,
-                s.saving_reference,
-                s.user?.name,
-                s.user?.email,
-                `₦${Number(s.amount_saved).toLocaleString()}`,
-                `₦${Number(s.total).toLocaleString()}`,
-                `₦${Number(s.balance).toLocaleString()}`,
-                s.status,
-                new Date(s.created_at).toLocaleDateString(),
-            ])),
-            styles: { fontSize: 9 },
-            headStyles: { fillColor: [30, 30, 30] },
-        });
-
-        doc.save(`savings-${Date.now()}.pdf`);
+        html2pdf()
+            .set({
+                margin: 0.4,
+                filename: `savings-report-${Date.now()}.pdf`,
+                image: { type: "jpeg", quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: {
+                    unit: "in",
+                    format: "a4",
+                    orientation: "landscape",
+                },
+            })
+            .from(pdfRef.current)
+            .save();
     };
 
     const statusStyles = {
@@ -115,7 +92,7 @@ export default function Index({ breadcrumbs }) {
                             type="text"
                             value={keyword}
                             onChange={(e) => setKeyword(e.target.value)}
-                            placeholder="Name, email or order ID"
+                            placeholder="Name, email or reference"
                             className="border rounded px-3 py-2 text-sm w-56"
                         />
                     </div>
@@ -148,8 +125,15 @@ export default function Index({ breadcrumbs }) {
                     </button>
                 </div>
 
-                {/* Table */}
-                <div className="overflow-x-auto bg-white rounded-lg shadow">
+                {/* ================= PDF CONTENT ================= */}
+                <div ref={pdfRef} className="bg-white rounded-lg shadow overflow-x-auto">
+                    <div className="p-4 border-b">
+                        <h2 className="text-lg font-semibold">Savings Report</h2>
+                        <p className="text-xs text-gray-500">
+                            Generated on {new Date().toLocaleString()}
+                        </p>
+                    </div>
+
                     <table className="min-w-full text-sm">
                         <thead className="bg-gray-100 text-gray-600">
                             <tr>
@@ -160,11 +144,12 @@ export default function Index({ breadcrumbs }) {
                                 <th className="px-4 py-3 text-left">Balance</th>
                                 <th className="px-4 py-3 text-left">Status</th>
                                 <th className="px-4 py-3 text-left">Created</th>
+                                <th className="px-4 py-3 text-left">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {savings.data.map((s) => (
-                                <tr key={s.id} className="border-t hover:bg-gray-50">
+                                <tr key={s.id} className="border-t">
                                     <td className="px-4 py-3 font-mono text-xs">
                                         {s.saving_reference}
                                     </td>
@@ -195,6 +180,15 @@ export default function Index({ breadcrumbs }) {
                                     <td className="px-4 py-3 text-xs text-gray-500">
                                         {new Date(s.created_at).toLocaleDateString()}
                                     </td>
+                                    <td className="px-4 py-3">
+                                        <Link
+                                            href={route("savings.show", s.id)}
+                                            className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600"
+                                        >
+                                            <Eye className="w-4 h-4" />
+                                            View
+                                        </Link>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -207,6 +201,7 @@ export default function Index({ breadcrumbs }) {
                         <Link
                             key={i}
                             href={link.url || "#"}
+                            preserveState
                             className={`px-3 py-1 border rounded text-sm ${
                                 link.active
                                     ? "bg-black text-white"

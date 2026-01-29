@@ -92,6 +92,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('bank', AccountController::class);
     });
 
+    Route::post("/saving/transaction/update/{transaction}", [SavingController::class, 'updateTransactionStatus'])->name('savings.transaction.update');
  //   Route::get('/savings', [SavingController::class, 'index'])->name('savings.index');
 Route::get('/savings/export', [SavingController::class, 'export'])->name('savings.export');
 

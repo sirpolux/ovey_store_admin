@@ -22,8 +22,10 @@ class SavingResource extends JsonResource
             'balance' => $this->balance,
             'status' => $this->status,
             'user' =>new UserResource($this->user),
-            'order' =>new OrderResource($this->order),
+            'order' =>new OrderSavingResource($this->order),
+            'transactions' =>TransactionResource::collection($this->transactions),
             'created_at' => $this->created_at,
+
         ];
     }
 }
