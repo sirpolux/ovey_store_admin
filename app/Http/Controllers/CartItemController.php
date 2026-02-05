@@ -20,7 +20,7 @@ class CartItemController extends Controller
         $cart_item = $query->where('status', 'OPEN')->orderBy('id', 'desc')->paginate(20)->onEachSide(1);
         return inertia('Cart/Index',[
             'cart'=>CartResource::collection($cart_item)
-        ] );
+        ]);
 
     }
 
