@@ -24,6 +24,8 @@ class OrderMinimalResource extends JsonResource
             'contact_number' => $this->contact_number,
             'delivery_address' => $this->delivery_address,
             'delivery_state' => $this->delivery_state,
+            'receipt_ref' => $this->receipt_ref,
+            'generated_at' => $this->generated_at,
             'created_at' => $this->created_at,
         ];
     }

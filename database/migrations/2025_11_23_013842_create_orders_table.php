@@ -23,7 +23,9 @@ return new class extends Migration
             $table->string('delivered_by')->nullable();
             $table->string('contact_number')->nullable();
             $table->string('delivery_address')->nullable();
-            $table->string('delivery_state')->nullable();   
+            $table->string('delivery_state')->nullable();
+            $table->string('receipt_ref')->nullable();
+            $table->date('generated_at')->nullable();
             $table->timestamps();
         });
     }

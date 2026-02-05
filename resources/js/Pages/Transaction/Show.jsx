@@ -126,6 +126,7 @@ export default function Show() {
                             <div><strong>Sender Bank:</strong> {txn.sender_bank}</div>
                             <div><strong>Account Name:</strong> {txn.sender_account_name}</div>
                             <div><strong>Account Number:</strong> {txn.sender_account_number}</div>
+                           
                         </div>
 
                         {txn.evidence_of_payment && (
@@ -148,6 +149,7 @@ export default function Show() {
 
                             <div className="text-sm">
                                 <div><strong>Order ID:</strong> #{order.id}</div>
+                                 <div><strong>Receipt Ref:</strong> {txn.order.receipt_ref}</div>
                                 <div><strong>Status:</strong> {order.status}</div>
                                 <div><strong>Total Cost:</strong> ₦{Number(order.total_cost).toLocaleString()}</div>
                                 <div><strong>Created:</strong> {new Date(order.created_at).toLocaleDateString()}</div>

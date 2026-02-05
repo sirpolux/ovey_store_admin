@@ -104,7 +104,17 @@ export default function Index({ items, queryParams = {} , breadcrumbs}) {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="p-2 rounded-lg bg-indigo-50">
-                            <CubeIcon className="w-5 h-5 text-indigo-600" />
+                            {item.uploads.length > 0 ? (
+                              <img
+                                src={item.uploads[0].file_path}
+                                alt={item.item_name}
+                                className="w-10 h-10 object-contain rounded"
+                              />
+                            ) : (
+                              <CubeIcon className="w-5 h-5 text-indigo-600" />
+                            )
+                            }
+                           
                           </div>
                           <div>
                             <p className="font-medium text-gray-800">
