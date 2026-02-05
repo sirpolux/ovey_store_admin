@@ -34,11 +34,15 @@ class ItemController extends Controller
                   ->orWhere('manufacturer', 'like', "%{$keyword}%");
             });
         }
+
+        $query->with('uploads');    
+        
     
         $items = $query->orderBy($sortField, $sortDirection)
             ->paginate(20)
             ->withQueryString(); // keeps filters on pagination
     
+            
         return inertia('Item/Index', [
             'items'      => ItemResource::collection($items),
             'filters'    => [

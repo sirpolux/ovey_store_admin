@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId("order_id")->nullable()->constrained('orders')->nullOnDelete();
-            $table->foreignId("user_id")->constrained('users')->nullOnDelete();
+            $table->foreignId("user_id")->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('saving_id')->constrained()->onDelete('cascade');
             $table->string("transaction_type")->default("CREDIT");
             $table->enum('purpose', ['ITEM_PURCHASE', 'SAVINGS']);
