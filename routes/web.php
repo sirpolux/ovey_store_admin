@@ -8,6 +8,7 @@ use App\Http\Controllers\ItemImageController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SavingController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SettingsController;
@@ -60,6 +61,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('cart', CartController::class);
     Route::resource('order', OrderController::class);
     Route::resource('savings', SavingController::class);
+    Route::resource('sales', SalesController::class);
+    
     Route::resource('transactions', TransactionController::class);
     Route::post('/transactions/status/update/{transaction}', [TransactionController::class, 'updateTransactionStatus'])->name('transactions.status.update');
     Route::resource('log', LogController::class);
