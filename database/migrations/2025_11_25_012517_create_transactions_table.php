@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId("order_id")->nullable()->constrained('orders')->nullOnDelete();
             $table->foreignId("user_id")->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('saving_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('sale_id')->nullable()->constrained()->nullOnDelete();
             $table->string("transaction_type")->default("CREDIT");
             $table->enum('purpose', ['ITEM_PURCHASE', 'SAVINGS']);
             $table->string("recipient_account_id")->nullable();

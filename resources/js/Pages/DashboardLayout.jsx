@@ -32,7 +32,6 @@ export default function DashboardLayout({ children}) {
         { label: "Transactions", link: "transactions.index", icon: <GrTransaction className="text-xl" /> },
         { label: "Savings", link: "savings.index", icon: <AiOutlineStock className="text-xl" /> },
         {label: "Sales", link: "sales.index", icon: <MdOutlineShoppingCart className="text-xl" />},
-
         { label: "Users", link: "user.index", icon: <FaUsers className="text-xl" /> },
         { label: "Settings", link: "settings.index", icon: <MdSettings className="text-xl" /> },
     ];
